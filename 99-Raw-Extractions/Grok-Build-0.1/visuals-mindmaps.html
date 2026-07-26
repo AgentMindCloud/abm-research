@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Boutique Super System — Visual Map Pack</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --card: #1a2332;
+      --card2: #243044;
+      --text: #e8eef7;
+      --muted: #8b9bb4;
+      --accent: #5b9fd4;
+      --green: #3dcb8a;
+      --amber: #e6b84d;
+      --rose: #e86a7a;
+      --violet: #9b7bde;
+      --line: #2d3a4f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      padding: 2rem 1.25rem 4rem;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; font-weight: 700; margin: 0 0 0.35rem; letter-spacing: -0.02em; }
+    .sub { color: var(--muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    h2 {
+      font-size: 1.15rem;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--accent);
+    }
+    h2 span { color: var(--muted); font-weight: 500; font-size: 0.85rem; margin-left: 0.5rem; }
+    .note {
+      background: var(--card);
+      border-left: 3px solid var(--accent);
+      padding: 0.75rem 1rem;
+      margin: 0 0 1.25rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+    /* Mindmap */
+    .mind {
+      background: linear-gradient(160deg, var(--card), #151c28);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.5rem 1rem 2rem;
+      overflow-x: auto;
+    }
+    .mind-core {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .hub {
+      background: linear-gradient(135deg, #2a5080, #1e3a5f);
+      border: 2px solid var(--accent);
+      color: #fff;
+      font-weight: 700;
+      padding: 1rem 1.5rem;
+      border-radius: 999px;
+      text-align: center;
+      max-width: 280px;
+      box-shadow: 0 0 40px rgba(91, 159, 212, 0.25);
+    }
+    .hub small { display: block; font-weight: 500; opacity: 0.85; font-size: 0.75rem; margin-top: 0.25rem; }
+    .branches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+    .branch {
+      background: var(--card2);
+      border-radius: 12px;
+      padding: 0.85rem;
+      border-top: 3px solid var(--accent);
+    }
+    .branch.g { border-top-color: var(--green); }
+    .branch.a { border-top-color: var(--amber); }
+    .branch.r { border-top-color: var(--rose); }
+    .branch.v { border-top-color: var(--violet); }
+    .branch h3 {
+      margin: 0 0 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .branch ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .branch li { margin: 0.2rem 0; }
+    /* Flow phases */
+    .phases {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: stretch;
+    }
+    .phase {
+      flex: 1 1 140px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0.9rem;
+      position: relative;
+    }
+    .phase .num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .phase h3 { margin: 0.25rem 0 0.4rem; font-size: 0.95rem; }
+    .phase p { margin: 0; font-size: 0.78rem; color: var(--muted); }
+    .phase .risk {
+      margin-top: 0.5rem;
+      font-size: 0.72rem;
+      color: var(--green);
+    }
+    .arrow {
+      display: flex;
+      align-items: center;
+      color: var(--muted);
+      font-size: 1.25rem;
+      flex: 0 0 auto;
+    }
+    @media (max-width: 700px) { .arrow { display: none; } }
+    /* Risk upside */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 700px) { .split { grid-template-columns: 1fr; } }
+    .panel {
+      border-radius: 12px;
+      padding: 1.1rem;
+      border: 1px solid var(--line);
+    }
+    .panel.down { background: rgba(232, 106, 122, 0.08); border-color: rgba(232, 106, 122, 0.35); }
+    .panel.up { background: rgba(61, 203, 138, 0.08); border-color: rgba(61, 203, 138, 0.35); }
+    .panel h3 { margin: 0 0 0.6rem; font-size: 1rem; }
+    .panel.down h3 { color: var(--rose); }
+    .panel.up h3 { color: var(--green); }
+    .panel ul { margin: 0; padding-left: 1.15rem; font-size: 0.85rem; color: var(--muted); }
+    .panel li { margin: 0.35rem 0; }
+    /* Architecture layers */
+    .layers { display: flex; flex-direction: column; gap: 0.45rem; }
+    .layer {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--line);
+    }
+    @media (max-width: 600px) {
+      .layer { grid-template-columns: 1fr; }
+    }
+    .layer .label {
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    .layer .body { font-size: 0.82rem; color: var(--muted); }
+    .layer.human { border-left: 4px solid var(--amber); }
+    .layer.brain { border-left: 4px solid var(--violet); }
+    .layer.truth { border-left: 4px solid var(--accent); }
+    .layer.hands { border-left: 4px solid var(--green); }
+    .layer.fulfill { border-left: 4px solid var(--rose); }
+    /* Decision tree */
+    .tree {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.78rem;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1.25rem;
+      border: 1px solid var(--line);
+      white-space: pre;
+      overflow-x: auto;
+      color: #b8c9e0;
+      line-height: 1.5;
+    }
+    .tree .ok { color: var(--green); }
+    .tree .warn { color: var(--amber); }
+    .tree .bad { color: var(--rose); }
+    /* Smart players table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      background: var(--card);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.7rem 0.85rem;
+      border-bottom: 1px solid var(--line);
+    }
+    th { background: var(--card2); color: var(--accent); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    td { color: var(--muted); }
+    tr:last-child td { border-bottom: none; }
+    .dumb { color: var(--rose); }
+    .smart { color: var(--green); }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--card2);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      margin-right: 0.35rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p><span class="tag">VISUAL PACK</span><span class="tag">JULY 2026</span></p>
+    <h1>Zero-Inventory Boutique · Bigger Picture</h1>
+    <p class="sub">Mindmaps & diagrams for the multi-agent POD Shopify system (Vietnam-friendly, low-risk start). Open this file in any browser. Pair with <strong>CONTINUE-when-you-return.md</strong>.</p>
+
+    <!-- 1 BIG PICTURE MINDMAP -->
+    <h2>1 · System mindmap <span>what you’re building</span></h2>
+    <p class="note">Center = business model. Branches = capabilities. You win on speed + systems, not stock.</p>
+    <div class="mind">
+      <div class="mind-core">
+        <div class="hub">
+          Trend Boutique
+          <small>Zero inventory · POD · Multi-agent</small>
+        </div>
+        <div class="branches">
+          <div class="branch">
+            <h3>Commerce</h3>
+            <ul>
+              <li>Shopify store</li>
+              <li>Sidekick (ops AI)</li>
+              <li>3–5 SKUs to start</li>
+              <li>Honest shipping copy</li>
+            </ul>
+          </div>
+          <div class="branch g">
+            <h3>Fulfillment</h3>
+            <ul>
+              <li>Printful / Printify</li>
+              <li>Print after pay</li>
+              <li>Native autosubmit</li>
+              <li>No warehouse</li>
+            </ul>
+          </div>
+          <div class="branch a">
+            <h3>Marketing</h3>
+            <ul>
+              <li>Short-form organic</li>
+              <li>Manychat DMs</li>
+              <li>Tiny ads on winners</li>
+              <li>Email after signal</li>
+            </ul>
+          </div>
+          <div class="branch v">
+            <h3>Agent team</h3>
+            <ul>
+              <li>Trend Scout</li>
+              <li>Offer / Listing</li>
+              <li>Creative Factory</li>
+              <li>Support (draft only)</li>
+            </ul>
+          </div>
+          <div class="branch r">
+            <h3>Control plane</h3>
+            <ul>
+              <li>Human approvals</li>
+              <li>Sheets log</li>
+              <li>Unit economics</li>
+              <li>Kill losers weekly</li>
+            </ul>
+          </div>
+          <div class="branch">
+            <h3>Vietnam ops</h3>
+            <ul>
+              <li>3rd-party payments</li>
+              <li>No fake SP country</li>
+              <li>Tax when real $</li>
+              <li>Global buyers first</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 LAYERS -->
+    <h2>2 · Stack layers <span>who does what</span></h2>
+    <div class="layers">
+      <div class="layer human">
+        <div class="label">HUMAN</div>
+        <div class="body">Niche choice · Approve publish · Ad budget · Refunds · Weekly kill decisions · Brand taste</div>
+      </div>
+      <div class="layer brain">
+        <div class="label">BRAIN</div>
+        <div class="body">ChatGPT + your multi-connector tester · Trend / Offer / Creative / Support agents · Lab vs production</div>
+      </div>
+      <div class="layer truth">
+        <div class="label">TRUTH</div>
+        <div class="body">Shopify + Sidekick · Prices, orders, customers · Never invent tracking in chat</div>
+      </div>
+      <div class="layer hands">
+        <div class="label">HANDS</div>
+        <div class="body">Zapier logs & alerts · Manychat · Email flows · UTMs · Not for POD submit if native works</div>
+      </div>
+      <div class="layer fulfill">
+        <div class="label">FULFILL</div>
+        <div class="body">POD partner · Paid → print → ship → tracking back to Shopify</div>
+      </div>
+    </div>
+
+    <!-- 3 PHASE PATH -->
+    <h2>3 · Low-risk path <span>phases · cap downside</span></h2>
+    <div class="phases">
+      <div class="phase">
+        <div class="num">Phase 0</div>
+        <h3>Desk</h3>
+        <p>Niche one-liner. Trend Scout only. No ads. Optional free trials.</p>
+        <div class="risk">Risk: ~$0–30</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="phase">
+        <div class="num">Phase 1</div>
+        <h3>Plumbing</h3>
+        <p>Shopify + POD + payment test order. 3 SKUs. Z01–Z02.</p>
+        <div class="risk">Risk: plan + fees</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="phase">
+        <div class="num">Phase 2</div>
+        <h3>Signal</h3>
+        <p>Organic content 14 days. Optional marketplace test. Log engagement.</p>
+        <div class="risk">Risk: time only</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="phase">
+        <div class="num">Phase 3</div>
+        <h3>Proof</h3>
+        <p>Double winner. Email cart. Micro ads $5–15/day if needed.</p>
+        <div class="risk">Risk: small $</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="phase">
+        <div class="num">Phase 4</div>
+        <h3>System</h3>
+        <p>Full agents, more SKUs, Sidekick habit, scale what works.</p>
+        <div class="risk">Risk: managed</div>
+      </div>
+    </div>
+
+    <!-- 4 RISK UPSIDE -->
+    <h2>4 · Asymmetry <span>cap down · keep up</span></h2>
+    <div class="split">
+      <div class="panel down">
+        <h3>Cap the downside</h3>
+        <ul>
+          <li>No inventory purchases</li>
+          <li>Software ≤ ~$80–120/mo early</li>
+          <li>Max 3–5 SKUs until a winner</li>
+          <li>$0 big ads before signal</li>
+          <li>Draft-only customer AI</li>
+          <li>Real payment identity (no ToS fraud)</li>
+          <li>Kill designs weekly</li>
+        </ul>
+      </div>
+      <div class="panel up">
+        <h3>Keep the upside</h3>
+        <ul>
+          <li>Own brand + customer email list</li>
+          <li>Winner design scales with ads</li>
+          <li>Agent pack reuses on new niches</li>
+          <li>Speed vs slow competitors</li>
+          <li>Digital upsells (high margin)</li>
+          <li>Later: marketplace, retail, services</li>
+          <li>Skills compound (creative + ops AI)</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 5 SMART VS DUMB -->
+    <h2>5 · Smart players vs common traps <span>2026 pattern</span></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Topic</th>
+          <th class="dumb">Common trap</th>
+          <th class="smart">Smarter pattern</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Start</td>
+          <td class="dumb">40 SKUs + $50/day ads day 1</td>
+          <td class="smart">3 SKUs + organic / marketplace signal first</td>
+        </tr>
+        <tr>
+          <td>Traffic</td>
+          <td class="dumb">Paid only, no brand</td>
+          <td class="smart">Organic (or Etsy) → Shopify list → paid on winners</td>
+        </tr>
+        <tr>
+          <td>Product</td>
+          <td class="dumb">Random viral memes</td>
+          <td class="smart">Tight niche aesthetic + IP-safe designs</td>
+        </tr>
+        <tr>
+          <td>AI</td>
+          <td class="dumb">One mega-bot auto-runs store</td>
+          <td class="smart">Role agents + human gates + Shopify as truth</td>
+        </tr>
+        <tr>
+          <td>Fulfillment</td>
+          <td class="dumb">Slow cheap dropship as “premium”</td>
+          <td class="smart">POD with honest times + quality samples</td>
+        </tr>
+        <tr>
+          <td>Money</td>
+          <td class="dumb">Ignore fees & refunds</td>
+          <td class="smart">Unit economics sheet before scale</td>
+        </tr>
+        <tr>
+          <td>Learning</td>
+          <td class="dumb">Restart niche every week</td>
+          <td class="smart">One niche 30 days; kill SKUs not identity</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 6 DECISION TREE -->
+    <h2>6 · When you return · decision tree</h2>
+    <div class="tree">START
+ │
+ ├─ Niche one-liner written?
+ │    <span class="bad">NO</span> → Write it. Stop. (Sprint A)
+ │    <span class="ok">YES</span>
+ │
+ ├─ Payment + POD test order done?
+ │    <span class="bad">NO</span> → Plumbing only (Sprint B). No ads.
+ │    <span class="ok">YES</span>
+ │
+ ├─ 3 SKUs live + 14 days content logged?
+ │    <span class="bad">NO</span> → Product lab + organic (Sprint C–D)
+ │    <span class="ok">YES</span>
+ │
+ ├─ Any sale OR strong saves/ATC?
+ │    <span class="bad">NO</span> → New designs in SAME niche. Don’t scale ads.
+ │    <span class="warn">WEAK</span> → Improve creative + offer. Tiny tests only.
+ │    <span class="ok">YES</span> → Phase 3: email + micro ads on WINNER only
+ │
+ └─ Repeatable?
+      <span class="ok">YES</span> → Phase 4 systemize (full agents, more SKUs)
+      <span class="bad">NO</span> → Keep learning loop; protect cash</div>
+
+    <!-- 7 AGENT FLOW -->
+    <h2>7 · Weekly agent loop <span>operating rhythm</span></h2>
+    <div class="mind">
+      <div class="branches" style="max-width:100%">
+        <div class="branch v"><h3>Mon · Scout</h3><ul><li>Trend brief</li><li>IP flags</li><li>Pick 1 theme</li></ul></div>
+        <div class="branch a"><h3>Tue · Offer</h3><ul><li>1–3 SKU specs</li><li>Margin check</li><li>Design brief</li></ul></div>
+        <div class="branch"><h3>Wed · List</h3><ul><li>Listing Ops</li><li>Sidekick polish</li><li>Human publish</li></ul></div>
+        <div class="branch g"><h3>Thu–Fri · Create</h3><ul><li>Reels / posts</li><li>Manychat</li><li>Human post</li></ul></div>
+        <div class="branch r"><h3>Sat · Measure</h3><ul><li>Sheets</li><li>ATC / sales</li><li>Creative winners</li></ul></div>
+        <div class="branch a"><h3>Sun · Finance</h3><ul><li>Unit economics</li><li>Kill / keep</li><li>Plan next week</li></ul></div>
+      </div>
+    </div>
+
+    <!-- 8 DOC MAP -->
+    <h2>8 · Where everything lives</h2>
+    <div class="tree">research/
+  report.md
+  part2-verticals-and-gaps.md
+
+system/
+  boutique-super-system-pack.md   ← prompts · zaps · payments
+  visuals-mindmaps.html           ← THIS FILE
+
+execute/
+  CONTINUE-when-you-return.md     ← checklists · next actions
+  [your Google Sheet]
+  [Shopify + connector tool]</div>
+
+    <footer>
+      Not financial or legal advice. Open CONTINUE-when-you-return.md next.<br />
+      Single next action: write your niche one-liner.
+    </footer>
+  </div>
+</body>
+</html>
