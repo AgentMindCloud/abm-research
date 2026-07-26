@@ -1,680 +1,1061 @@
-# AI Capability Map – 2026-07-26
+# AI Capability Map – 2026-07-27
 
-**Author of this pass:** Claude (Opus) · **Version:** 1.0 (first full draft)
-**Raw evidence log:** `99-Raw-Extractions/AI-Capabilities-Claude-2026-07-26.md`
-**Scope:** what AI agents and systems can *reliably* do in production as of July 2026,
-and where the hard walls are, judged against the constraints in
-`00-Meta/ABM-Project-Continuity.md` (solo operator, low regulation, digital-first).
+**Version:** 1.1 — Claude foundation plus independent ChatGPT evidence audit
+**Scope:** Production-relevant AI agents and systems available by July 2026
+**Not in scope:** Product ideation or crossing capabilities with market needs
 
-**Confidence convention:** every claim carries **High / Medium / Low**.
-- **High** = primary source (paper, publisher's own docs, government or CC-licensed dataset), or multiple independent primaries agreeing.
-- **Medium** = consistent secondary reporting of a primary, or a checkable vendor claim.
-- **Low** = single unverified source, vendor self-report, or market-sizing projection. Used only where the *direction* matters and the magnitude does not.
+## Evidence and rating conventions
 
-**A warning about the 2026 information environment.** Searching "AI agent benchmark 2026"
-returns a large volume of SEO content-farm pages that publish confident benchmark tables
-with no methodology, and in several cases cite model names that cannot be verified to
-exist. This map rejects those sources by name in the raw log (§A of the raw file). Where
-numbers conflict, the conflict is shown rather than averaged away. **Confidence (High)** —
-this was directly observed across ~20 searches in this pass.
-
----
+- **Maturity 1–3:** experimental; unsuitable for unattended business outcomes.
+- **Maturity 4–6:** useful with a bounded task, instrumentation, and routine
+  human or deterministic review.
+- **Maturity 7–8:** production-capable for well-specified use cases with
+  conventional software controls and exception handling.
+- **Maturity 9–10:** commodity-level reliability across varied environments.
+  No generative-agent category earns this rating in this map.
+- **Reliable without human?** means repeated completion of the stated business
+  outcome, not plausible text or a successful demonstration.
+- **High confidence** normally means a primary official source, peer-reviewed
+  paper, or official benchmark with inspectable methods. **Medium confidence**
+  normally means a current preprint or vendor observational/deployment report.
+  **Low confidence** is reserved for marketing or evidence that has not been
+  independently validated.
+- Product availability, price, and model names are a dated **2026-07-27
+  snapshot**. A platform having a feature is not evidence that applications
+  built with it are reliable.
+- Sources from 2024 are retained only when they remain foundational and are
+  marked as older under the project’s source rules.
 
 ## 1. Executive Summary
 
-**The one-sentence state of the art:** in July 2026, AI systems are extremely strong at
-*bounded, verifiable, digital transformations of text and structured data*, moderately
-strong at *tool-mediated action inside a narrow permission surface*, and still
-fundamentally unreliable at *open-ended, long-horizon, multi-application work without
-supervision*. Nothing in the last twelve months has changed that shape — the numbers moved,
-the shape did not.
+### The production reality
 
-Eight findings that should govern every design decision in this project:
+AI systems are already useful production components, but the reliable product
+is usually a **controlled workflow containing model calls**, not a general
+autonomous worker. The strongest systems narrow the task, expose state, limit
+permissions, verify outputs, checkpoint progress, and escalate exceptions.
+This conclusion is consistent across field evidence, benchmarks, security
+research, and current platform guidance.
 
-**1. The autonomy horizon is real, measurable, and much shorter than the headlines.**
-METR's task-completion time-horizon work puts frontier 50%-reliability horizons in the
-14–20 hour range by mid-2026, with doubling time compressing from ~7 months (2019–2025) to
-~4 months (2024–2026). But METR itself states that "measurements above 16 hrs are
-unreliable with our current task suite," that the horizons apply to *software
-engineering, ML and cybersecurity* tasks, that the human baseline is a **low-context new
-hire or contractor** rather than an expert, and that tasks are **well-specified and
-algorithmic** — explicitly excluding work with interpersonal or holistic success criteria.
-*(METR, page last updated 2026-05-08 — **High** for the caveats, **Medium** for the
-figures.)* The 50% horizon is a coin-flip horizon. **A business process needs the 80%
-horizon, which in METR's fitted curves runs roughly 4–5× shorter — order of 1–3 hours.**
+The best cross-domain production study available in this audit reports 20 case
+studies and 86 practitioners across 26 domains. Sixty-eight percent of deployed
+agents execute no more than 10 steps before human intervention; 70% primarily
+prompt off-the-shelf models; 74% rely mainly on human evaluation; and
+reliability is the leading deployment challenge [S03, 2026-06-04, **High**].
+This is widespread use of **bounded autonomy**, not evidence of an unattended
+general workforce.
 
-**2. Benchmark saturation is masking the collapse on realistic work.** Computer-use agents
-went from 12% (April 2024) to ~66% on the *original* OSWorld — reported as within ~6
-points of the 72.4% human baseline. On **OSWorld 2.0**, which lengthens and realises the
-same task family, the best configuration (Claude Opus 4.8, maximum thinking, batched tool
-calls) completes **20.6%** of tasks at a 54.8% partial score; the next model plateaus near
-13%. *(OSWorld 2.0, 2026-06-26 — **High** for direction, **Medium** for exact figures.)*
-**A ~3× drop from one benchmark revision is the single most important number in this
-document.** Any product plan that assumes "computer use works now" is planning against
-the saturated benchmark.
+Capability and reliability are different variables. A 2026 ICML study evaluates
+15 models using 12 measures of consistency, robustness, predictability, and
+safety and finds that recent capability gains produce much smaller reliability
+gains [S04, 2026-06-02, **High**]. A system can therefore become more impressive
+at its best while remaining too inconsistent for an unverified recurring
+process.
 
-**3. Adoption is broad; agentic autonomy is not.** The Stanford AI Index 2026 reports 88%
-of organisations using AI in at least one business function and 78% of the Fortune 500
-deployed at scale — while finding that **agentic deployment remains limited across most
-business functions**, with governance, validation and readiness lagging badly. The
-described current phase is "augmentation within existing operating models."
-*(**Medium** — consistent secondary reporting; primary PDF not yet fetched, flagged as a
-verification debt.)* This is good news for a solo operator: the constraint is not model
-capability, it is *process design*, which is exactly where a single well-organised person
-can compete with an enterprise.
+Long-horizon computer use remains a hard boundary. OSWorld 2.0 contains 108
+realistic workflows with median human duration around 1.6 hours and an average
+318 tool calls. Its strongest reported configuration completes only 20.6% of
+tasks under a strict binary measure, although partial completion reaches 54.8%.
+Common failures include losing constraints, ignoring new information, guessing
+instead of asking, skipping verification, and misreading hidden state [S06,
+2026-07-13, **Medium-High**]. A more terminal-oriented benchmark reaches 65.8%
+on 120 tasks, reinforcing that explicit, machine-readable interfaces are
+materially easier than GUI state, but still not generally unattended [S07,
+2026-06, **Medium**].
 
-**4. Multi-agent complexity is a liability, not an asset.** MAST — 14 failure modes in 3
-clusters (system-design issues, inter-agent misalignment, task verification), built from
-150 expert-annotated traces at κ = 0.88 and extended to 1,600+ traces across 7 frameworks
-— finds multi-agent gains on popular benchmarks "often minimal" and concludes that **many
-failures stem from poor system design, not model performance**. *(NeurIPS 2025 —
-**High**.)* Independently, minimal coding scaffolds (mini-swe-agent) reach near-SOTA,
-which says scaffold sophistication is not the bottleneck. *(**Medium**.)*
-**Design implication: one competent agent with excellent tools and an explicit state
-machine beats a crew.**
+Tool use is strongest when it is short, typed, observable, reversible, and
+low-risk. The April 2026 Berkeley Function-Calling Leaderboard reports a top
+multi-turn score of 68.38 compared with 88.58 for single-turn tasks [S08,
+2026-04-12, **High**]. That gap is the practical distance between “the model can
+call a function” and “the system can manage a business process.”
 
-**5. Connector security is unsolved and is the project's largest existential risk.**
-MCPTox (AAAI) tested 45 live MCP servers and 353 authentic tools against poisoned tool
-descriptions: **attack success above 60%, up to 72%** on many popular agents, and the
-most-resistant model refused poisoned tool calls **less than 3%** of the time.
-InjecAgent: GPT-4 vulnerable 24% at baseline, 47% under enhanced attacks.
-MCP-SafetyBench: host-side attacks over 80% success on average. In May 2026 OX Security
-disclosed a systemic vulnerability across multiple MCP implementations. *(**High** that
-the problem is structural; **Medium** for the incident's scale.)* The recurring real-world
-shape — attested by the 2025 Supabase/Cursor support-ticket breach — is
-**privileged access + untrusted input + an outbound channel**. Any ABM that reads
-customer-supplied text and holds write credentials contains this pattern by construction.
+Security is not solved by telling the model to be careful. MCPTox evaluates 45
+live MCP servers, 353 tools, 1,348 cases, and 20 agent settings; it observes an
+attack-success rate as high as 72.8%, with many popular settings above 60%
+[S10, 2026-03-14, **High**]. MCP-SafetyBench finds overall attack success of
+29.8–48.16%, an 81.94% average for host-side attacks, and 100% identity-injection
+success across 13 tested models [S11, 2026, **High**]. Any agent that reads
+untrusted content and holds consequential permissions needs architectural
+isolation, not just prompt guardrails.
 
-**6. Cost is no longer a design constraint for text work; it is one for long-horizon
-work.** Mid-tier frontier-adjacent models sit around $1–$3 per million input tokens and
-$6–$15 output, with batch APIs at a flat 50% discount across all major providers, and
-prices at a constant capability tier having fallen sharply year over year.
-*(**Medium** for the band, **Low** for the ~80% reduction magnitude.)* Voice is at roughly
-$0.07/minute *(**Medium**, checkable vendor pricing)* — a 4-minute booking call costs
-about $0.28. **Cost only bites where token consumption is superlinear in horizon length:
-long-context re-reading, retry storms, and multi-agent chatter.**
+Multi-agent systems are conditionally useful, not an automatic upgrade. Across
+180 configurations, centralized multi-agent systems improve parallelizable
+tasks by as much as 80.9%, but all tested multi-agent variants degrade
+sequential tasks by 39–70%; decentralized systems amplify independent errors
+17.2 times versus 4.4 times for centralized systems [S29, 2026-01-28,
+**Medium-High**]. The right rule is: use multiple agents only when subtasks can
+be independently executed, objectively checked, and deterministically merged.
 
-**7. Where the tooling attention is *not* going is measurable — and it is exactly the
-territory this project has chosen.** The Anthropic Economic Index (CC BY 4.0, period
-2026-05-01) shows observed Claude usage matched to task catalogs, by job category:
-**Computer & Mathematical 23.8%**, Arts/Design/Media 13.6%, Educational Instruction &
-Library 12.8%, Office & Administrative Support 7.9% — versus **Personal Care & Service
-1.23%** and **Healthcare Support 0.62%**. At occupation level, tasks commonly done by
-Hairdressers/Hairstylists/Cosmetologists account for **0.02%** of usage (rank 318 of 718
-published occupations) and Skincare Specialists **0.04%** (rank 250). *(**High** —
-primary, publisher-licensed dataset.)* **Important framing constraint stated by the
-publisher: this measures usage of tasks, not people, and cannot support any claim about
-employment or displacement.** Read correctly, it is a *supply-of-attention* signal:
-AI capability is being pointed at technical and creative desk work, and almost not at
-personal-care service operations. That is the whitespace hypothesis, now with a number
-attached.
+### What can be trusted today
 
-**8. Vietnam-specific: local usage is thinner, more technical, and more
-automation-styled.** Vietnam's Anthropic Usage Index is **0.53** — usage per working-age
-person about half the global average — ranking 84 of 121 covered countries. Its
-conversations skew to work (53.1% vs 43.4% global), automation-style over
-augmentation-style (51.4% vs 48.6% — the mirror of the global split), Software Development
-(18.0% vs 11.5%) and Content Creation (24.9% vs 22.7%), while "advice or recommendation"
-artifacts are half the global rate (5.5% vs 10.7%). *(**High** — primary.)* Practical
-read: building *from* Vietnam for Western service-business buyers is not competing against
-a saturated local AI-services market, but local talent and habit are pointed at
-code and content, not at operations tooling.
+With the controls specified in this map, current systems are production-capable
+for:
 
-**What this means for the next stage of the project.** The Master Synthesis' conclusion —
-bounded autonomy with progressive delegation — survives the 2026 evidence intact and is
-if anything better supported than when it was written. The buildable zone in July 2026 is:
-**short-horizon (minutes to ~1 hour), single-domain, API-mediated (not GUI-mediated),
-objectively verifiable, reversible workflows, with deterministic state held outside the
-model, one agent rather than several, and a human gate on anything that moves money,
-sends unreviewed messages to third parties, or writes to a system of record.**
+- drafting, rewriting, classification, translation, and summarization;
+- evidence collection and first-pass synthesis with inspected citations;
+- schema-constrained extraction from bounded document classes, with field-level
+  validation and exception queues;
+- short tool workflows over typed APIs with explicit postconditions;
+- monitoring in which deterministic collectors find events and models
+  summarize, cluster, or prioritize;
+- bounded code changes in a sandbox, gated by strong tests and review;
+- grounded customer-service triage and routine support, with verified
+  transactions and escalation;
+- task decomposition and routing under a clear goal and known constraints;
+- evaluation where a deterministic oracle or task-specific checker exists; and
+- parallel specialist work whose dependencies are represented in a DAG and
+  whose outputs can be independently scored.
 
----
+They should not be trusted without human or deterministic control for:
+
+- general long-horizon GUI operation;
+- self-certifying completion or quality;
+- high-impact action after reading untrusted web, email, or document content;
+- model memory acting as the business system of record;
+- open-ended strategic judgment, negotiation, or relationship ownership;
+- open multi-agent swarms;
+- regulated advice or irreversible financial, legal, medical, or safety
+  decisions; or
+- any workflow whose failure is difficult to detect, reverse, or compensate.
+
+### The system design implication
+
+The most dependable pattern is:
+
+`typed input -> explicit state -> short model step -> restricted tool ->
+deterministic check -> durable checkpoint -> risk gate -> observable outcome`
+
+The model supplies probabilistic judgment. Ordinary software owns identity,
+authorization, state transitions, invariants, money movement, audit logs,
+idempotency, and proof of completion. This is the same “bounded,
+process-aware autonomy” conclusion reached in the project’s previous synthesis
+[S02, 2026-07, **High** for internal synthesis].
 
 ## 2. Core Capability Categories
 
-Maturity is scored 1–10 for **production reliability in a solo-operated business**, not
-for demo impressiveness or benchmark score. A 7 means "you can build a product on this if
-you design the failure path." A 4 means "it will work in your tests and fail with
-customers."
-
-"Reliable without human?" is answered for a *bounded, well-specified* instance of the
-capability — not the general case.
-
----
-
 ### 2.1 Research & synthesis
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Retrieval + summarisation over a **defined corpus** (docs you supply) | **8/10** | **Yes**, with citation-back requirement and refusal-on-missing-evidence | Confident interpolation between sources; silent dropping of a source that contradicts the emerging narrative; over-weighting the first document read | Claude/GPT/Gemini long-context + RAG; Claude Agent SDK for tool loops | Cheap. A 50-page corpus synthesis is a few cents to low tens of cents at mid-tier pricing. Batch API at 50% off for non-interactive runs | Project corpus `2403.08399v2` (multi-agent SLR decomposition); pricing aggregators July 2026 — **Medium** |
-| Open-web research with source discovery | **6/10** | **No** — needs a human or a deterministic checker on source *quality* | Cites SEO content farms as authoritative (directly observed in this pass); fabricates plausible URLs; treats vendor blogs as neutral; date-blind (2023 numbers presented as current) | Search-enabled models; deep-research modes | Moderate. Long research runs consume 100k+ tokens; superlinear in the number of pages read | Direct observation, this pass — **High**; Master Synthesis "confabulation" — **High** |
-| Comparative / structured analysis across sources | **7/10** | Partially — reliable at *assembling* the comparison, unreliable at *adjudicating* conflicts | Averages away contradictions instead of surfacing them; invents a middle number that appears in no source | Same, with an explicit "show disagreement, do not resolve it" instruction | Cheap | This pass, §A of raw log — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Search-plan generation, query expansion, and source discovery | 8 | Yes for discovery; no for final source selection | Search drift, duplicated sources, popularity bias, missed local-language material | Search APIs plus a model-driven query loop; commercial “deep research” modes | Cheap compared with analyst time, but tool calls and long contexts accumulate; cap queries and deduplicate | [S15, 2025-06, **Medium**]; [S16, 2025-06, **Medium**] |
+| Bounded-corpus summarization and comparison | 8 | Usually, when every statement must map to supplied evidence | Omission, compression of disagreement, lost qualifiers, citation attached to the wrong clause | Long-context models, retrieval with stable document IDs, claim-to-evidence tables | Batch processing is economical; quality rises when the corpus is pre-cleaned and segmented | [S17, 2026, **High**]; [S31, 2024-12-19, **Medium-High**, older] |
+| Open-web research with citations | 6 | No for consequential claims | Source fabrication, citation laundering, stale evidence, temporal errors, selective synthesis | Deep-research agents with frozen evidence snapshots, browser traces, citation checkers | One answer can require dozens of searches and large contexts; pay for verified claims, not generated pages | [S15, 2025-06, **Medium**]; [S16, 2025-06, **Medium**]; [S17, 2026, **High**] |
+| Cross-lingual and local-market research | 5 | No | Translation changes entity names and qualifiers; lower retrieval recall; English/US source bias | Multilingual search, native-language queries, bilingual evidence review | Requires more queries, human spot checks, and local primary sources; Vietnam evidence is thinner | [S18, 2026-06, **Medium**]; project source rules |
+| Final decision-grade synthesis | 5 | No | Fluent narrative hides unsupported inference, conflicting evidence is averaged away, static judges approve polished errors | Claim ledger, contradiction table, independent reviewer with tools, human sign-off | Verification can cost as much as first-pass research; this is appropriate for major decisions | [S17, 2026, **High**]; [S27, 2026-06-01, **Medium**] |
 
-**Verdict for ABMs.** Productised research and monitoring remains the single highest
-autonomizability category (consistent with the Master Synthesis ranking). The reliable
-version is **closed-corpus**: the customer's own documents, a curated source allowlist, or
-a monitored set of URLs. Open-web research sold as a product inherits the 2026 web's
-source-quality collapse and needs a human editor — which is fine for a solo operator whose
-stated role includes quality gates, but it caps the margin.
+**Production boundary.** Research agents are reliable assistants when the
+deliverable exposes sources, dates, uncertainty, and unresolved conflicts.
+They are not reliable authorities. “Citation present” is not the same as
+“claim entailed”: ACL 2026 describes a mirage in which fluent, citation-aligned
+reports still obscure factual and reasoning defects [S17, 2026, **High**].
 
----
+**Recommended control stack.** Freeze or archive decisive source passages;
+record the query trail; require claim-level citations; use a separate checker
+that can open sources; and send high-impact or conflicting claims to a human.
 
 ### 2.2 Structured data extraction
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Simple fields from semi-structured docs (totals, names, dates, IDs) | **8/10** | **Yes** at 99%+ per field, with schema validation + confidence routing | Format normalisation errors (dates, currencies, thousands separators); hallucinating a plausible value rather than returning null | Gemini / GPT / Claude vision + JSON-schema-constrained output; LlamaParse-class parsers | Very cheap per document; batch discount applies | Invoice-OCR benchmarks 2026 — **Medium** for pattern, **Low** for any single figure |
-| Complex fields (line items, multi-row tax tables, nested structures) | **6/10** | **No** for financial straight-through processing | 95–97% field accuracy vs a cited 99.9% STP threshold for financial/identity fields; row misalignment; dropped or duplicated rows; silent truncation of long tables | Same, plus deterministic post-validation (totals must reconcile) | Cheap per doc, expensive per *error* | Same — **Medium** |
-| Extraction from poor-quality inputs (phone photos, faxes, handwriting) | **4/10** | **No** | Accuracy degrades sharply and *without a corresponding drop in stated confidence* — the most dangerous property in the whole category | Preprocessing + human queue | — | OCR accuracy comparisons 2026 — **Medium** |
-| Unstructured text → structured records (emails, chat, notes → CRM fields) | **7/10** | **Yes** for low-stakes fields, **No** for anything that triggers an action | Over-extraction (inventing fields that were only implied); entity confusion across multiple people in one thread | Function-calling / structured-output modes | Cheap | Project corpus + this pass — **Medium** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Typed JSON/schema compliance from clean text | 9 | Yes for syntax; not automatically for values | Valid JSON containing wrong, missing, or normalized-away values | Native structured outputs, JSON Schema, constrained decoding | Very low retry cost; schema validation should be mandatory | [S19, 2026-04-28, **Medium**] |
+| Exact field extraction from bounded clean text | 8 | Yes for low-risk fields with validation | Negation errors, unit conversion, entity confusion, silent null filling | Schema-constrained LLM plus regex/rules and source-span capture | Best benchmark exact leaf-value result is 83.0%; reconciliation is still needed for critical fields | [S19, 2026-04-28, **Medium**] |
+| Repeated semi-structured documents from a known template | 8 | Often, with template checks and exceptions | Template drift, OCR errors, column association, headers/footers copied as data | Hybrid template inference, targeted LLM extraction, OCR, deterministic parsers | Hybrid systems can be dramatically faster and cheaper than applying a vision model to every page | [S20, 2025, **High**]; [S21, 2025-05-15, **Medium-High**] |
+| Heterogeneous PDFs, scans, tables, and forms | 5 | No | Reading-order loss, merged cells, handwriting, low-resolution OCR, layout-dependent relationships | Document AI parsers, multimodal models, page images plus field validators | Best reported exact leaf-value accuracy on document images is 67.2%; exception handling dominates operating cost | [S19, 2026-04-28, **Medium**]; [S20, 2025, **High**] |
+| Audio/transcript-to-record extraction | 4 | No | Speaker confusion, numbers and names misheard, inferred facts, missing context | ASR plus diarization plus schema extraction and confirmation | Best reported exact leaf-value accuracy is only 23.7% in the cited benchmark | [S19, 2026-04-28, **Medium**] |
+| High-stakes record creation | 3 | No | Plausible but wrong values pass format validation; provenance lost | Dual extraction, deterministic reconciliation, source-span review, human approval | Human review cost is justified when one wrong field creates legal, financial, or safety exposure | [S19, 2026-04-28, **Medium**]; [S14, 2024/2026, **High**] |
 
-**Verdict for ABMs.** This is the most under-rated buildable category. The trick is that
-**arithmetic and cross-field consistency are checkable deterministically** — if line items
-must sum to a stated total, you get a free verifier, and a free confidence signal that is
-actually calibrated. A workflow with a deterministic verifier can run at genuinely high
-autonomy. A workflow without one cannot, regardless of model quality. **Design rule:
-never ship an extraction product where the output cannot be checked by code.**
+**Critical distinction.** Near-perfect schema compliance is not near-perfect
+extraction. A 2026 benchmark over 21 models reports best exact leaf-value
+accuracy of 83.0% for text, 67.2% for document images, and 23.7% for audio even
+when output format is usually correct [S19, 2026-04-28, **Medium**].
 
----
+**Production boundary.** A robust extractor returns the value, the supporting
+span or page, field-level confidence, validation results, and an explicit
+exception—not merely a JSON object.
 
 ### 2.3 Long-horizon multi-step workflows
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| 3–10 step workflow, single domain, explicit state, API tools | **7/10** | **Yes** with per-step validation, idempotent steps, and a bounded retry policy | Step skipping when an intermediate output is ambiguous; retry storms; state drift between model belief and system of record | LangGraph (durable execution, checkpointing); Temporal/Inngest-class durable workflow engines; n8n for the glue | Predictable, roughly linear in steps | LangGraph production positioning — **Medium**; project corpus `2501.07834v2` (Flow, dynamic task graphs) — **High** |
-| 10–50 step workflow with branching | **5/10** | **No** — needs checkpoints and a human-visible run log | Cascading local errors; loss of the original goal by mid-run; plan-repair loops that never terminate | Same + explicit task-graph decomposition and replanning bounds | Superlinear cost: context re-reading dominates | `2501.07834v2` (bounded replanning) — **High**; OSWorld 2.0 — **High** |
-| Open-ended "achieve this outcome" over hours, multi-application | **3/10** | **No.** Do not build on this | **20.6% completion on OSWorld 2.0** at the frontier; the 50%-reliability horizon is a coin flip and METR flags measurements above 16h as unreliable at all | — | Very expensive per successful completion; the failed runs still cost full price | OSWorld 2.0 2026-06-26 — **High**; METR 2026-05-08 — **High** for caveats |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Predefined workflow with short model nodes and durable state | 8 | Yes for low-risk processes with deterministic gates | Bad routing, unhandled exception, non-idempotent retry | State machines, Temporal/DBOS/Restate/Dapr, LangGraph checkpoints, OpenAI Agents SDK | Workflow overhead is modest; the value comes from resumption and controlled retries | [S31, 2024, **Medium-High**, older]; [S34, 2026-07-27, **High**]; [S35, 2026-07-27, **High**] |
+| Ten-or-fewer step bounded agent loop | 7 | Sometimes | Tool error, instruction drift, premature stopping, retry loops | Agent harness with step budget, postconditions, and escalation | This matches the dominant production pattern: 68% intervene by 10 steps | [S03, 2026-06-04, **High**] |
+| Long terminal workflow with tests and machine-readable feedback | 6 | No for arbitrary tasks; sometimes for narrow recurring tasks | Environment setup, dependency conflict, stale state, hidden credentials | Coding agents in containers, terminal tools, test runners | Terminal interaction is materially stronger than GUI, but best cited broad score is 65.8% | [S07, 2026-06, **Medium**]; [S22, 2026-03-14, **High**] |
+| General browser/desktop workflow | 3 | No | Hidden state, focus changes, modal dialogs, timing, lost constraints, skipped verification | Computer-use models, Playwright where DOM access exists | OSWorld 2.0 strict completion is 20.6% for the strongest reported configuration; long runs are token-heavy | [S06, 2026-07-13, **Medium-High**] |
+| Unattended cross-application business process | 3 | No | Compounding errors, partial side effects, inconsistent permissions, no recovery path | Only defensible after conversion into typed API steps and compensating transactions | Expected cost must include failures, cleanup, duplicate side effects, and supervision | [S03, 2026-06-04, **High**]; [S04, 2026-06-02, **High**] |
+| Open-ended “work until done” autonomy | 2 | No | No measurable finish state, circular work, budget exhaustion, destructive action | Research prototypes only | Unbounded token/tool spend and unbounded downside | [S05, 2026-05-08, **High**]; [S06, 2026-07-13, **Medium-High**] |
 
-**Verdict for ABMs.** The gap between rows 1 and 3 is where nearly all failed AI startups
-of 2025–2026 live. **Build in row 1. Sell the *outcome* of row 3 by composing row-1 units
-behind a state machine you own.** Concretely: a durable workflow engine holds the state,
-each node is a short bounded model call with a validator, and the customer sees a
-long-horizon result. This is the "framed autonomy" of the Master Synthesis, expressed as
-architecture.
+**Production boundary.** Duration is not the same as autonomy. A workflow can
+run for days reliably if durable software owns the state and each model call is
+short. Conversely, a 90-minute opaque GUI task can be unreliable because the
+agent must remember hundreds of observations and infer hidden application
+state.
 
----
+METR’s time-horizon measure is useful but should not be over-read: it estimates
+the duration of human-completable software tasks at a specified success
+probability over 100+ tasks, and METR explicitly warns that estimates above 16
+hours are unreliable [S05, updated 2026-05-08, **High**]. It does not establish
+safe, economic autonomy in an arbitrary business environment.
 
 ### 2.4 Tool use & connector orchestration
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Calling 1–10 well-documented, typed APIs | **8/10** | **Yes** | Parameter hallucination on optional fields; wrong tool when two tools overlap semantically; ignoring an error response and proceeding as if it succeeded | Provider-native function calling; MCP for standardised tool surfaces | Cheap; tool schemas consume input tokens on every turn — keep the toolset small | Project corpus `a-practical-guide-to-building-agents` (tool risk tiers) — **High** |
-| Calling 20+ tools / large MCP surfaces | **5/10** | **No** | Tool-selection accuracy degrades with surface size; schema tokens crowd the context; silent capability drift when a server updates | Tool search / progressive disclosure; namespacing; per-task tool subsets | Large surfaces raise per-turn cost materially | This pass + framework docs — **Medium** |
-| Acting on **untrusted external content** while holding credentials | **2/10** | **No. This is the hard no of the entire map** | **MCPTox: >60%, up to 72% attack success across 45 live MCP servers and 353 real tools; the most-resistant model refused poisoned tool calls <3% of the time.** InjecAgent: 24%→47%. MCP-SafetyBench host-side attacks >80% | Nothing available in July 2026 makes this safe by itself. Mitigations are architectural: privilege separation, no outbound channel in the same context as untrusted input, allowlisted actions, human gate | Security failure cost is unbounded — it is not a cost line, it is a business-ending event | MCPTox (AAAI) — **High**; AgentDojo `2406.13352v3` — **High**; OX Security May 2026 — **Medium** |
-| GUI / browser automation of third-party web apps without an API | **4/10** | **No** | Brittle to UI change; 20.6% on realistic long-horizon computer use; a failed run can leave the third-party system in a partial state | Playwright + vision as a *last resort*, ideally read-only | High cost per successful run | OSWorld 2.0 — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Single typed read-only function call | 9 | Usually | Wrong tool among similar options, wrong enum/entity, missing prerequisite | Native function calling, strict schema, deterministic validation | Low latency and cost; cache reads where freshness permits | [S08, 2026-04-12, **High**]; [S09, 2025, **High**] |
+| Short sequence of read-only tools | 8 | Often, with step/postcondition checks | State forgotten between calls, redundant calls, stale result | Agents SDKs, MCP clients, explicit scratch/state object | Multi-turn performance is materially below single-turn; set budgets | [S08, 2026-04-12, **High**]; [S09, 2025, **High**] |
+| Reversible write action | 6 | Only with scoped authorization and receipt verification | Wrong record, duplicate write, stale precondition, partial update | Preview/commit pattern, idempotency key, version check, audit receipt | Verification API call adds cost but prevents expensive cleanup | [S32, 2026, **Medium-High**]; [S35, 2026-07-27, **High**] |
+| Irreversible or high-impact tool action | 3 | No | Misinterpreted intent, prompt injection, excessive scope, non-reversible loss | Human approval, two-person rule, separate credentials, policy engine | Human latency is a safety feature; do not optimize it away | [S14, 2024/2026, **High**]; [S32, 2026, **Medium-High**] |
+| Connector use over trusted data | 7 | Sometimes | Schema drift, permission mismatch, pagination, rate limits | MCP/function tools with typed contracts, allowlists, integration tests | Operational reliability is often dominated by the API, not the model | [S09, 2026, **High**]; [S34, 2026-07-27, **High**] |
+| Tool use after ingesting untrusted content | 2 | No | Indirect prompt injection, identity spoofing, malicious tool metadata or output | Separate trust zones, taint tracking, content isolation, no ambient authority | Security controls and review outweigh token cost | [S10, 2026, **High**]; [S11, 2026, **High**]; [S12, 2024, **High**, older] |
 
-**Verdict for ABMs.** Connectors are the value and the risk in the same object. The
-architectural rule that follows from the evidence is **the two-context rule**: a context
-that reads untrusted input must not hold write credentials or an outbound channel, and a
-context that acts must only receive *validated, typed, enumerated* instructions from the
-first. Guardrails and prompt instructions do not substitute for this — the Master
-Synthesis already lists "guardrails alone secure connectors" under *not supported*, and
-the 2026 numbers make it emphatic.
+**Production boundary.** Tool reliability requires four independent properties:
+the model selected the right tool, supplied correct arguments, had appropriate
+authorization, and verified the real postcondition. A successful API response
+does not prove the intended business outcome.
 
----
+**Security rule.** The component that interprets untrusted content should not
+also possess ambient write authority. Use least-privilege, task-scoped
+credentials; allowlisted tools; data-flow separation; preview and approval for
+consequential actions; and immutable receipts.
 
 ### 2.5 Content generation + revision
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Transforming existing content between formats/lengths/registers | **9/10** | **Yes** | Voice drift over long batches; quiet factual insertion during "polish"; over-smoothing that removes distinctiveness | Any frontier or mid-tier model; cheap models are sufficient here | Very cheap; the best margin/quality ratio in the whole map | Master Synthesis (structured content transformation ranked high) — **High** |
-| Generating net-new content from a brief | **7/10** | Partially | Generic register; unrequested claims; SEO-slop convergence — everyone's output looks the same because everyone's prompt is the same | Frontier models + strong style grounding on the customer's own prior work | Cheap | Anthropic Economic Index: Content Creation & Copywriting is the **largest global request topic at 22.7%** — **High** |
-| Content requiring domain claims (health, legal, financial) | **3/10** | **No** | Confabulated specifics stated fluently; liability transfers to the operator | — | — | Master Synthesis: confabulation; project exclusions in Continuity §3 — **High** |
-| Multi-turn revision against critique | **7/10** | Partially | Sycophantic agreement with bad critique; oscillation between two versions; "improvement" that changes meaning | Explicit rubric + diff-constrained edits | Cheap | LLM-judge bias literature 2026 — **Medium** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Drafting from a supplied brief and facts | 9 | Yes for internal drafts | Generic tone, missed constraint, unsupported flourish | Frontier or efficient models with templates and brand examples | Small/fast models are sufficient for many first drafts; batch for volume | [S31, 2024, **Medium-High**, older]; [S38–S40, 2026, **High** for pricing] |
+| Rewrite, shorten, classify, translate, reformat | 9 | Usually for low-risk use | Meaning drift, dropped negation, locale mismatch | Structured output, diff view, glossary, examples | Among the highest-value low-cost uses; deterministic format checks | [S03, 2026, **High**]; [S18, 2026, **Medium**] |
+| Brand-consistent content with revision loop | 8 | Yes for draft production; no for final public claim set | Style imitation without substance, repetitive patterns, outdated product facts | Retrieval of approved claims, style rubric, generator-critic loop | Two-pass drafting is inexpensive; do not confuse self-critique with fact-checking | [S31, 2024, **Medium-High**, older]; [S17, 2026, **High**] |
+| Factual public content | 6 | No | Hallucinated facts, stale links, citation mismatch, exaggerated claims | Grounded generation, approved-claim library, link checker, human editor | Verification often costs more than generation | [S15–S17, 2025–2026, **Medium-High**] |
+| High-volume personalization | 7 | Only within approved factual/ethical boundaries | Creepy inference, sensitive-attribute use, inconsistent offer, reputational harm | Segmentation rules plus model copy variation; compliance filters | Unit cost is low; governance and review sampling are the real cost | [S14, 2024/2026, **High**] |
+| Regulated or consequential claims | 3 | No | Fabricated authority, omitted disclaimers, unlicensed advice | Approved templates and expert review only | Liability overwhelms automation savings | Project exclusions; [S14, 2024/2026, **High**] |
 
-**Verdict for ABMs.** Content Creation & Copywriting is simultaneously the **largest**
-observed usage category globally (22.7% of requests) and therefore the **most
-commoditised**. Generic content generation is not a business in July 2026. Content
-*transformation embedded in a workflow with proprietary input* is — the defensibility
-lives in the input (a specific customer's client history, service records, past messages),
-not in the generation.
-
----
+**Production boundary.** Generative models are mature as drafting engines. They
+are not mature as publishers of new factual claims. The most reliable design
+restricts factual content to an approved, versioned claim library and makes
+creative variation happen around those facts.
 
 ### 2.6 Monitoring + alerting
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Watching defined sources for defined change conditions | **8/10** | **Yes** | Alert fatigue from loose thresholds; missed change when source structure shifts silently; duplicate alerts on the same underlying event | Scheduled jobs + diffing + a model only for classification/summary of the delta | Very cheap — the model sees only the delta, not the corpus | Master Synthesis (productised monitoring ranked highest) — **High** |
-| Judging whether a change **matters** to a specific customer | **6/10** | Partially | Miscalibrated importance; no memory of what was already flagged last week; over-alerting to look useful | Per-customer rubric + explicit suppression state | Cheap | This pass — **Medium** |
-| Anomaly detection over business metrics | **7/10** | **Yes** for statistical detection, **No** for causal explanation | Confident spurious causation ("bookings fell because of the weather") | Deterministic stats for detection, model for narration only | Cheap | Project corpus `2603.18916v3` (APM: actionability and explanation) — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Deterministic collection and rule-based alerting | 10 | Yes | Bad source, threshold design, missing telemetry | Schedulers, webhooks, database queries, observability platforms | Use ordinary software; no model required for detection | Standard software practice |
+| Summarizing and prioritizing known alerts | 9 | Usually | Severity inversion, omitted anomaly, unsupported cause | LLM over bounded event payload plus source links | Small models can handle most events; reserve frontier calls for ambiguous cases | [S31, 2024, **Medium-High**, older] |
+| Clustering and deduplicating noisy alerts | 8 | Yes with measurable fallback | Semantically different incidents merged, recurring incident split | Embeddings plus deterministic keys and review sampling | Can reduce human load substantially; maintain golden incident sets | [S37, 2026, **Medium-High**] |
+| Detecting semantic change in known sources | 7 | Sometimes | Cosmetic change treated as material, dynamic page noise, missed visual change | DOM diff, extraction rules, screenshot comparison, model classifier | Two-stage deterministic diff then LLM interpretation controls cost | [S31, 2024, **Medium-High**, older] |
+| Open-web novelty or weak-signal monitoring | 5 | No | Coverage gaps, rumor amplification, source duplication, language bias | Search feeds, curated source lists, human review queue | Cost grows with source breadth and frequency; precision/recall trade-off is unavoidable | [S15, 2025, **Medium**]; [S18, 2026, **Medium**] |
+| Automatic consequential action from an alert | 3 | No unless action is reversible and tightly bounded | False positive triggers write, adversarial input, feedback loop | Policy engine, cooldown, preview, approval, compensating transaction | Value must be net of false-action cleanup | [S10–S14, 2024–2026, **High**] |
 
-**Verdict for ABMs.** Monitoring is the highest-autonomy, lowest-risk, best-margin
-capability available to a solo operator, for three structural reasons: the model handles
-only the delta (cheap), errors are *omissions and noise* rather than destructive actions
-(reversible), and the value is recurring by nature (subscription-shaped). **Separate
-detection from explanation** — do detection in code, narration in the model — and the
-failure surface stays small.
-
----
+**Production boundary.** Let deterministic systems decide that an event
+occurred whenever possible. Let the model explain, cluster, or prioritize it.
+If a model-detected condition can trigger a write, require a separate
+postcondition and risk gate.
 
 ### 2.7 Code generation & maintenance
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Writing/modifying code in a repo with tests | **8/10** | **Yes** within a review gate; **No** for unattended deploy | Tests that pass while missing the bug (UTBoost shows SWE-bench suites are insufficiently rigorous, so reported scores are optimistic); plausible-but-wrong API usage; silent scope creep | Claude Agent SDK / Claude Code; OpenAI Codex-class; Gemini CLI; mini-swe-agent | Highest-value token spend available to a solo founder. This is the capability that makes the whole project feasible | SWE-bench Verified ~80–81% April 2026 cluster — **Medium**; UTBoost `2506.09289` — **High** |
-| Long-running autonomous maintenance (dependency upgrades, refactors) | **6/10** | Partially, with CI as the verifier | Large diffs that pass CI and break behaviour; migration half-applied | Durable agent runs + CI gates + small-diff policy | Moderate | Terminal-Bench 2.0 / LongCLI-Bench 2026 — **Medium** |
-| Greenfield systems from a spec | **6/10** | **No** | Architecture that works at demo scale and not at 100 customers; security defaults omitted | Human architectural decisions, agent implementation | Cheap relative to hiring | Project corpus `2308.00352v7` (MetaGPT SOPs), `2307.07924v5` (ChatDev maker/reviewer/tester) — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Localized change with clear acceptance tests | 8 | Yes in sandbox; no for merge/deploy by default | Test gaming, hidden regression, misunderstood convention | Claude Code, Codex, Gemini CLI, OpenHands; lint/type/test gates | Often strong ROI; cost is dominated by repo exploration and test loops | [S22, 2026, **High**]; [S23, 2026, **High**]; [S07, 2026, **Medium**] |
+| Test, documentation, migration, and mechanical maintenance | 8 | Often with deterministic gates | Brittle tests, incorrect mocks, stale docs, unsafe migration assumption | Repository-aware agents plus CI and disposable databases | Excellent for parallel low-risk queues if reviews remain independent | [S22, 2026, **High**]; [S23, 2025, **High**] |
+| Multi-file feature in a familiar repository | 6 | No | Architectural drift, partial implementation, missed integration path | Coding agent in isolated worktree, task plan, full test suite, reviewer | Several model/tool loops; success strongly depends on human expertise | [S23, 2026, **High**]; [S24, 2026-06-16, **Medium**] |
+| Repository-scale refactor or unfamiliar environment | 5 | No | Environment setup, dependency mismatch, false green tests, incomplete migration | Containerized environment, incremental commits, strengthened tests | GitTaskBench best cited result is 48.15%; more than half of failures are mundane setup/environment issues | [S22, 2026-03-14, **High**] |
+| Vulnerability/security repair | 5 | No | Symptom patch, new attack surface, missed call path, unsafe dependency | Static analysis, security tests, human security review, agent for candidate patch | High review cost is justified; require adversarial tests | [S14, 2024/2026, **High**] |
+| Unattended merge and production deployment | 3 | No except trivial low-blast-radius canaries with rollback | False test oracle, secrets/config mismatch, irreversible migration, outage | Protected branches, staged rollout, canary, automated rollback, human gate | Deployment risk—not token price—sets the control level | [S23, 2025, **High**]; [S27, 2026, **Medium**] |
 
-**Verdict for ABMs.** This is the strongest capability in the map *and* the reason a
-solo operator can attempt any of this. It is also the most saturated market — the Economic
-Index shows Computer & Mathematical at **23.8%** of all observed usage, ~1.75× the next
-category. **Use coding capability as leverage; do not sell it as the product.**
+**Production boundary.** Coding agents are most reliable when the repository is
+the environment, the task has executable acceptance criteria, the agent works
+in isolation, and CI plus a reviewer can reject the result. They are less
+reliable when success depends on unwritten architecture, production-only state,
+or inadequate tests.
 
----
+Benchmark pass rates can be false assurance. UTBoost identifies 36 tasks with
+insufficient tests and 345 erroneous patches labeled as passed, changing
+rankings for 40.9% of SWE-bench Lite and 24.4% of SWE-bench Verified entries
+[S23, 2025, **High**]. The verifier is part of the product.
 
 ### 2.8 Customer communication
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Answering questions from a defined knowledge base | **7/10** | **Yes** within a narrow, high-structure intent set | Confident answers outside the knowledge base; failure to escalate; policy invention ("we can refund that") | Intercom Fin, Decagon, Sierra, Lorikeet; or own build on a frontier model | Cheap per ticket | Vendor and third-party resolution data — **Medium** for the band |
-| Autonomous resolution rate, realistic expectation | — | — | Vendor published averages span **51% / 67% / 76%** across sources; vendor's own case studies cluster **42–50%**; an independent 500-ticket small-business test landed at **38%**; B2B runs **17–25 points below** vendor benchmarks | — | — | Multiple 2026 sources, mutually inconsistent — **Low** individually, **Medium** for the 40–70% band |
-| Outbound messages to customers (reminders, follow-ups, rebooking) | **7/10** | **Yes** for templated + variable-filled; **No** for free-composed | Wrong recipient; wrong appointment detail; tone mismatch; duplicate sends; sending during quiet hours | Deterministic templates with model-selected variables and a model-written single variable field | Very cheap | This pass — **Medium** |
-| Voice / inbound phone handling | **6/10** | Partially | >800ms latency causes caller talk-over; ~80% first-attempt intent recognition in one 400-call test; accent and background-noise degradation; no graceful failure without an explicit fallback | Retell-class platforms (~600ms end-to-end, ~$0.07/min, native calendar booking) | **~$0.28 for a 4-minute booking call** — cheap enough to be transformative for single-location service businesses | Latency threshold recurs independently — **Medium**; intent figure single-tester — **Low** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| FAQ answer grounded in an approved knowledge base | 9 | Usually, with citations and abstention | Wrong document version, answer beyond policy, tone mismatch | RAG, policy retrieval, answer citations, confidence/escalation | Low per interaction; review a stratified sample rather than every answer | [S25, 2025, **High**]; [S26, 2026, **Medium**] |
+| Intent classification, triage, and routing | 9 | Yes with fallback | Multi-intent messages, urgency missed, language variation | Structured classification, priority rules, CRM/ticket connector | Small models often sufficient; measure route accuracy and reopen rate | [S03, 2026, **High**] |
+| Routine conversational support with read-only account context | 8 | Often | Hallucinated policy, failed identity boundary, premature resolution | Policy-grounded support agents, tool receipts, handoff summary | High-volume deployments can improve self-service, but company evidence is not universal | [S25, 2025, **High**]; [S26, 2026-06-07, **Medium**] |
+| Transactional support with reversible writes | 6 | No without deterministic checks and scoped authority | Wrong account/action, incomplete transaction, user-agent coordination failure | Preview/confirm/commit, receipt validation, escalation | Repeated reliability is much lower than single success; include failure recovery in unit economics | [S25, 2025, **High**]; [S26, 2026, **Medium**] |
+| Voice support | 5 | No for consequential actions | ASR error, interruption, identity ambiguity, latency, emotional escalation | Grounded voice agents with narrow tools and immediate handoff | Audio processing and low-latency models add cost; transcripts need privacy controls | [S19, 2026, **Medium**] |
+| Complaint, negotiation, retention, or vulnerable-customer interaction | 4 | No | False empathy, manipulation, failure to recognize exception, reputational damage | Human-led workflow with AI brief, next-best-action suggestions | Relationship value exceeds automation savings | [S14, 2024/2026, **High**] |
 
-**Verdict for ABMs.** The decisive variable in the resolution-rate spread above is not
-model quality — it is **intent-mix structure**. A narrow, high-structure intent set
-(appointment change, price question, hours, directions, rebooking) reaches the top of the
-band; open-ended B2B support does not. **Sell the narrow intent set.** And note the
-asymmetry that makes outbound the better first product: an unsent reminder costs a missed
-appointment; a wrongly-sent one costs trust. Templated outbound with model-selected
-variables keeps the blast radius at "slightly awkward" rather than "wrong information
-stated as policy."
+**Production boundary.** A support agent needs policy grounding, identity and
+authorization outside the model, a verified receipt for every transaction,
+and an escalation path the user can invoke. “Conversation ended” is not
+“problem solved.”
 
----
+Repeated success is the relevant metric. In τ-bench, GPT-4o is below 50% task
+success and retail pass^8 is below 25% [S25, 2025, **High**]. Company-authored
+Nubank evidence shows that carefully engineered deployments can deliver real
+benefits—one A/B test reports +37 percentage points transactional NPS and +29
+points self-service—but this is evidence for a specific controlled system, not
+general autonomy [S26, 2026-06-07, **Medium**].
 
 ### 2.9 Planning & task decomposition
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Decomposing a known process into steps | **8/10** | **Yes** | Plausible-but-wrong ordering; missing the error path entirely; omitting the step that requires information the model does not have | Explicit SOP/task-graph patterns | Cheap | `2308.00352v7` (SOPs), `2501.07834v2` (AOV graphs) — **High** |
-| Planning in a novel domain | **5/10** | **No** | Confidently generic plans; the "jagged frontier" — same workflow, some steps helped, some harmed | Human-authored plan, agent execution | Cheap | `dell-acqua-et-al-2026` (jagged frontier, causal) — **High** |
-| Dynamic replanning mid-run | **5/10** | **No** without bounds | Non-terminating repair loops; goal drift; each replan compounds context length and cost | Bounded replanning with a hard step budget and a fail-to-human exit | Cost grows fast | `2501.07834v2` — **High**; MAST — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Decompose a clear goal into a checklist | 9 | Usually | Redundant steps, missed local constraint, bad order | Frontier models, templates, examples, dependency labels | Cheap; validate prerequisites before execution | [S31, 2024, **Medium-High**, older] |
+| Build a dependency-aware DAG for known operations | 8 | Often with schema validation | Hidden dependency, circular graph, incorrect parallelization | Planner plus typed task schema and graph validator | Planning cost is small; parallelism can reduce wall time when real | [S29, 2026, **Medium-High**]; [S30, 2026, **Medium**] |
+| Replan from explicit tool feedback | 7 | Sometimes | Thrashing, repeating failed action, discarding earlier constraint | Bounded agent loop, retry taxonomy, failure memory, escalation threshold | Cap retries; repeated calls can exceed the value of the task | [S03, 2026, **High**]; [S31, 2024, **Medium-High**, older] |
+| Estimate time, cost, and risk | 5 | No | Confident but uncalibrated estimates, ignored tail risk, unknown environment | Reference-class data, deterministic cost model, model explanation | Use observed run distributions rather than model intuition | [S04, 2026, **High**]; [S05, 2026, **High**] |
+| Open-ended strategy under uncertain goals | 4 | No | Optimizes a proxy, invents assumptions, averages incompatible priorities | Scenario generation and decision memo for human owner | Valuable for option generation; unsuitable for final authority | [S02, 2026-07, **High** internal]; [S14, 2024/2026, **High**] |
+| Plan and execute without a separate verifier | 3 | No | Plan errors become action errors; self-review shares blind spots | Not recommended | Cheap up front, expensive in cleanup | [S27, 2026, **Medium**]; [S28, 2025, **Medium-High**] |
 
-**Verdict for ABMs.** **Author the process yourself; let the agent execute it.** The
-jagged-frontier result is causal evidence that delegation must be decided *per task*, not
-per role — which means the operator's real intellectual product is the task graph, and
-that is a durable asset that does not depreciate when the model changes.
-
----
+**Production boundary.** Planning is useful when goals, available actions, and
+finish conditions are explicit. It becomes speculative as hidden constraints,
+value judgments, and unknown environments increase. A plan should be a typed,
+inspectable artifact that a runtime validates—not private model reasoning.
 
 ### 2.10 Memory & state management
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| State in an external system of record (DB, ledger) | **9/10** | **Yes** — this is ordinary software, and that is the point | Only the usual engineering failure modes | Postgres/Supabase; durable workflow checkpoints | Negligible | Master Synthesis: "model memory should not replace a system of record" — **High** |
-| Within-task context (short-term memory) | **8/10** | **Yes** | Mid-context neglect; instruction decay over long contexts; earlier constraints quietly dropped | Compaction, explicit re-statement of constraints, structured scratchpads | Long contexts are the main cost driver in agent runs | Project corpus + this pass — **Medium** |
-| Cross-session semantic memory (agent "remembers the customer") | **5/10** | **No** | Stale facts asserted as current; no invalidation on change; sycophantic memory drift (MemSyco-Bench, 2026); retrieval that only succeeds after background processing completes | Mem0, Zep, Letta, LangMem | Mem0 reports ~6,900 tokens/query; Zep's footprint reported >600k tokens/conversation — a 100× spread | Vendor self-reports, publicly disputed between vendors — **Low** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Explicit transactional workflow state | 9 | Yes | Application bug, stale version, incomplete migration | Relational/event store, state machine, checkpoint ID, optimistic locking | Ordinary database cost; this should be the source of truth | [S34, 2026-07-27, **High**]; [S35, 2026-07-27, **High**] |
+| Short-term session context | 8 | Usually within a bounded run | Truncation, attention dilution, wrong conversation branch | Session object, compact state summary, scoped context | Long context has token and latency cost; store facts once, retrieve selectively | [S35, 2026-07-27, **High**]; [S39–S40, 2026, **High**] |
+| Retrieval of prior facts from a curated memory store | 7 | Sometimes | Wrong entity, stale fact, retrieval miss, no provenance | Typed records plus semantic search and source/date metadata | Embedding retrieval is cheap; freshness and invalidation are not | [S37, 2026, **Medium-High**] |
+| Automatic memory writing and consolidation | 5 | No | Stores inference as fact, duplicate/conflicting memories, privacy leakage | Candidate-memory queue, schema, provenance, human/rule approval | Review only high-value memory; retention has privacy and deletion cost | [S14, 2024/2026, **High**]; [S37, 2026, **Medium-High**] |
+| Cross-session preference memory | 6 | No for sensitive or consequential preferences | Context collapse, consent ambiguity, obsolete preference | User-visible profile, edit/delete controls, explicit scope | Small storage cost; governance is the dominant requirement | [S14, 2024/2026, **High**] |
+| Model context or vector memory as business system of record | 2 | No | Fabrication, stale retrieval, silent overwrite, no transaction isolation | Not recommended | Apparent simplicity creates reconciliation and liability cost | [S04, 2026, **High**]; [S34, 2026-07-27, **High**] |
 
-**Verdict for ABMs — and this is a finding worth stating plainly.** *Every published
-agent-memory number in July 2026 is a vendor number, and the two leading vendors publicly
-dispute each other's methodology on the same benchmark (Mem0 reporting 65.99% for Zep;
-Zep claiming 75.14% corrected).* There is no credible independent benchmark. Therefore:
-**treat "agent memory" as an unbenchmarked layer and do not build a product whose core
-promise is memory quality.** Put durable facts in a database with explicit schemas and
-invalidation rules, and use the memory layer only for retrieval convenience. For a
-customer-retention product — the project's prior lead candidate — this is decisive: the
-"memory" that a client prefers a certain treatment must be a *typed database field with a
-last-confirmed date*, not a vector recollection.
-
----
+**Production boundary.** “Memory” is several different systems. Workflow state
+belongs in a transactional store. Documents belong in a versioned repository.
+Preferences need provenance and user controls. Semantic retrieval is an access
+method, not a source of truth. The model should receive a task-specific view of
+state rather than own state.
 
 ### 2.11 Evaluation & self-critique
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| Deterministic verification (schema, arithmetic, API echo, diff, test suite) | **9/10** | **Yes** | Only what you forgot to check | Plain code. Always prefer this | Negligible | Master Synthesis — **High** |
-| LLM-as-judge on a fixed rubric, used as a **regression detector** | **7/10** | **Yes** for relative comparison over time | Systematic position bias across 15 judges / ~150k instances — **not random**, varies by judge and task; verbosity and self-preference bias | Frontier judge + fixed rubric + randomised option order + repeated sampling | Moderate: judging costs real tokens at volume | `arXiv 2606.19544` (2026-06) — **High**; RAND 2026 via secondary — **Low–Medium** |
-| LLM-as-judge as an **absolute quality certifier** | **3/10** | **No** | Reliability without validity — consistent scores that do not track truth. Strong judges reach κ>0.80 on well-structured tasks but no judge is uniformly reliable across benchmarks | — | — | Same — **High** |
-| Agent self-critique / self-correction | **5/10** | **No** | Cannot detect its own confabulations; "I have verified this" without verifying; confidence unchanged by error | Independent reviewer *with different tools and a separate context* | Doubles inference cost | `2307.07924v5` (maker/reviewer/tester), MAST verification cluster — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Deterministic outcome evaluation | 10 | Yes if the oracle is valid | Incomplete test, wrong metric, stale expected value | Unit/integration tests, schema checks, database postconditions, checksums | Usually cheaper and more reliable than an LLM judge | [S23, 2025, **High**]; [S27, 2026, **Medium**] |
+| Task-specific statistical/anomaly detector | 9 | Often | Dataset shift, threshold drift, label leakage | Lightweight classifier, retrieval comparison, calibrated threshold | One cited TF-IDF detector outperforms all tested LLM judges and is ~3,300 times lower latency | [S27, 2026-06-01, **Medium**] |
+| Rubric-based LLM judge for subjective quality | 7 | No as sole gate | Position/style bias, shared blind spot, prompt sensitivity | Multiple criteria, pairwise comparison, reference examples, disagreement sampling | Useful for triage; periodically anchor to human labels | [S04, 2026, **High**]; [S37, 2026, **Medium-High**] |
+| Independent model review with source/tool access | 7 | No for highest-impact decisions | Correlated model error, incomplete evidence, deference to fluent output | Different context/model, adversarial checklist, ability to inspect artifacts | Adds a model call but can cheaply reject obvious defects | [S17, 2026, **High**]; [S28, 2025, **Medium-High**] |
+| Self-critique in the same context | 5 | No | Rationalizes prior answer, fails to notice missing premise, cosmetic revision | Reflection pass only as one signal | Low incremental cost; low independence | [S27, 2026, **Medium**] |
+| Self-reported task success | 2 | No | False success, reward hacking, unverified side effect | Never use as the only completion signal | False success can dominate observed failures | [S27, 2026-06-01, **Medium**] |
 
-**Verdict for ABMs.** The title of the 2026 judge paper — *Reliability without Validity* —
-is the whole lesson. Build the evaluation ladder in this order and never skip a rung:
-**(1) deterministic checks, (2) a small hand-labelled golden set, (3) an LLM judge on a
-fixed rubric for regression only, (4) sampled human review of production traffic.** The
-Master Synthesis' instruction to build measurement *before* expanding authority is now
-directly supported by measurement of the measurers.
+**Critical distinction.** A judge evaluates an artifact; a verifier establishes
+an outcome. For operational tasks, completion should be proven by external
+state: the record exists with the correct version, the message was accepted by
+the intended endpoint, the tests exercise the intended behavior, or the
+customer explicitly confirms resolution.
 
----
+In one 2026 analysis, false success represents 45–48% of failures in
+single-control τ2 and 75.8% of AppWorld self-assessed success. No tested LLM
+judge exceeds AUROC 0.65 on τ2 or 0.54 on AppWorld, while a task-specific
+TF-IDF detector reaches 0.83 and 0.95 [S27, 2026-06-01, **Medium**]. Simple
+verifiers can beat sophisticated self-reflection.
 
 ### 2.12 Multi-agent coordination
 
-| Capability | Maturity | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
-|---|---|---|---|---|---|---|
-| One agent, many tools, explicit state machine | **8/10** | **Yes** for bounded workflows | Covered in §2.3/§2.4 | LangGraph; Claude Agent SDK; durable workflow engines | Predictable | MAST — **High**; mini-swe-agent near-SOTA with minimal scaffold — **Medium** |
-| Pipeline of specialised agents with typed handoffs (maker → reviewer → tester) | **7/10** | **Yes** where each handoff is a validated artifact | Reviewer rubber-stamps; error propagates because the handoff was prose rather than a typed object | MetaGPT/ChatDev-style SOP pipelines; LangGraph subgraphs | Cost multiplies by stage count | `2308.00352v7`, `2307.07924v5` — **High** |
-| Peer agents negotiating a shared goal | **3/10** | **No** | The MAST 14: specification/design violations, inter-agent misalignment (information withholding, derailment, reasoning-action mismatch), verification failures. Gains on benchmarks "often minimal" | — | Worst cost/benefit ratio in the map: token spend multiplies, reliability falls | MAST (NeurIPS 2025) — **High** |
-| Open agent swarms / emergent org structures | **2/10** | **No** | Everything above, unbounded | — | — | MAST — **High**; Master Synthesis "not yet supported" — **High** |
+| Capability | Maturity (1-10) | Reliable without human? | Typical failure modes | Best current tools/examples | Cost/performance notes | Sources |
+|---|---:|---|---|---|---|---|
+| Parallel independent research or generation with centralized merge | 7 | Sometimes | Duplicate work, inconsistent assumptions, weak merge rubric | Manager-worker, map-reduce, shared source ledger, deterministic dedupe | Can improve coverage; token cost rises roughly with workers | [S29, 2026, **Medium-High**] |
+| Parallel tasks represented by a valid DAG | 7 | Sometimes with objective checks | Hidden dependency, premature merge, inconsistent state | Central scheduler, specialist agents, per-node verifier | Specific computer-use results improve 3.4–25.5% and wall time about 1.5x | [S30, 2026, **Medium**] |
+| Generator plus independent critic/verifier | 7 | Yes for low-risk rejection/routing, not final authority | Correlated errors, critic lacks tools, endless revision | Separate prompts/models/context, deterministic stop rule | Often a better second-agent use than simulated personas | [S17, 2026, **High**]; [S28, 2025, **Medium-High**] |
+| Centralized manager over tool-using specialists | 6 | No for consequential work | Manager bottleneck, summary information loss, worker state conflict | Hierarchical agent system with shared typed state | Centralization limits error amplification but adds latency | [S28, 2025, **Medium-High**]; [S29, 2026, **Medium-High**] |
+| Sequential multi-agent handoffs | 4 | No | Information loss, incompatible assumptions, error propagation | Prefer one agent with explicit state unless expertise boundary is real | All tested multi-agent variants degrade sequential tasks by 39–70% in one broad study | [S29, 2026, **Medium-High**] |
+| Decentralized open-ended swarm | 2 | No | Independent error amplification, circular debate, no owner, runaway cost | Research only | Independent error amplification reaches 17.2x in the cited study | [S28, 2025, **Medium-High**]; [S29, 2026, **Medium-High**] |
 
-**Verdict for ABMs.** **Do not build a crew.** Build one agent, or a pipeline whose
-handoffs are typed artifacts that a validator can inspect. The evidence that MAS gains are
-minimal while MAS failure surface is large has now been replicated across 1,600+ traces
-and 7 frameworks. Multi-agent architecture in 2026 is a marketing aesthetic, not an
-engineering advantage, outside of narrow well-studied pipelines.
-
----
+**Production boundary.** “More agents” is not a capability category by itself.
+Use multiple agents when the work has real parallel structure, roles have
+distinct information or tools, every output has a contract, and one component
+owns the state and merge. Otherwise, extra agents increase interfaces,
+latency, correlated hallucination, and cost.
 
 ## 3. Agent Architecture Patterns That Actually Work in Production
 
-Five patterns, ordered by evidence strength. Each is a *composition* rule, not a product.
+### Pattern 1 — Deterministic workflow shell with bounded model nodes
 
-### P1. Durable state machine with short model calls at the nodes
-The workflow engine (LangGraph, Temporal, Inngest, or plain Postgres + a job runner) owns
-the truth: current step, inputs consumed, outputs produced, retry count. Each node is a
-short, well-specified model call with a validator. The model never holds the plan.
-**Why it works:** it converts a 3/10 capability (§2.3 row 3) into a composition of 7–8/10
-capabilities. It also makes every run auditable, which is the precondition for
-progressively removing human gates. *(**High** — this is the operationalisation of the
-Master Synthesis conclusion, and matches both LangGraph's production positioning and the
-Flow/MetaGPT task-graph findings.)*
+Ordinary software owns the workflow graph, state transitions, timeouts, retries,
+and finish conditions. The model performs narrow semantic steps such as
+classify, extract, draft, compare, or select among allowed next actions.
 
-### P2. Deterministic verifier attached to every autonomous step
-If an output cannot be checked by code — schema valid, totals reconcile, API echoed the
-expected state, tests pass, diff within bounds — the step does not get to be autonomous.
-It gets a human queue.
-**Why it works:** it is the only mechanism in the map with 9/10 maturity, and it produces
-a *calibrated* confidence signal, which no model self-report does. **This is the single
-highest-leverage design rule in this document.** *(**High**.)*
+**Why it works:** Most production deployments already intervene within 10
+steps, and workflows exchange flexibility for predictability [S03, 2026,
+**High**; S31, 2024, **Medium-High**, older].
 
-### P3. The two-context rule (privilege separation around untrusted input)
-Context A reads untrusted external content (customer emails, tickets, web pages, uploaded
-documents) and has **no credentials and no outbound channel**. It emits a typed,
-enumerated, validated object. Context B acts on that object with credentials but **never
-sees the raw untrusted text**.
-**Why it works:** the MCPTox/InjecAgent/MCP-SafetyBench results show injection resistance
-at the model level is effectively absent (<3% refusal for poisoned tools in the most
-resistant model tested). If resistance cannot be bought, the attack must be made
-structurally unprofitable. Every real-world incident in the record follows the
-privileged-access + untrusted-input + outbound-channel pattern; breaking any one leg
-breaks the chain. *(**High**.)*
+**Required controls:**
 
-### P4. Risk-tiered gates with progressive removal
-Tier 0 (read-only, internal) → autonomous from day one.
-Tier 1 (reversible external writes: draft created, internal note, tag applied) → autonomous
-after a measured period.
-Tier 2 (irreversible external effects: message sent to a customer, record written to a
-system of record, schedule changed) → human gate until per-workflow accuracy is measured
-on real traffic, then sampled review.
-Tier 3 (money movement, contractual commitments, anything the exclusions list touches) →
-permanent human gate, or do not build it.
-**Why it works:** it makes "autonomy %" an *earned, measured* quantity per workflow rather
-than a product claim, which is exactly the success metric in Continuity §8. *(**High** —
-project corpus: practical guide tool-risk tiers, NIST AI 600-1, APM controlled adaptation.)*
+- typed input and output at every node;
+- explicit maximum steps, retries, tokens, time, and spend;
+- durable checkpoint before and after any side effect;
+- deterministic routing for known conditions;
+- an exception state rather than forced completion; and
+- an observable postcondition for “done.”
 
-### P5. Independent review with a different context and different tools
-Where a human gate is being removed, the reviewer must be a *separate* invocation with a
-separate context and, ideally, different tools — not the same agent asked to double-check.
-Self-critique is 5/10; independent review with typed artifacts is 7/10.
-**Why it works:** MAST's third failure cluster is task verification, and ChatDev/MetaGPT's
-measured gains come specifically from role separation with structured intermediate
-artifacts. *(**High**.)*
+### Pattern 2 — Read, propose, verify, commit
 
-### Anti-patterns, stated explicitly
-- **Agent swarms / peer negotiation.** 2–3/10. Cost up, reliability down. *(MAST — High.)*
-- **Long-horizon GUI automation as the core mechanism.** 20.6% on realistic tasks. *(High.)*
-- **Model memory as the system of record.** Unbenchmarked, vendor-disputed, no invalidation
-  semantics. *(High that the evidence is absent.)*
-- **Guardrails/prompts as a security boundary.** Explicitly in the Master Synthesis'
-  not-supported list; the 2026 injection numbers close the case. *(High.)*
-- **LLM judge as the only quality gate.** Reliability without validity. *(High.)*
-- **"We'll add evaluation later."** Authority granted before measurement is the failure
-  mode that ends businesses rather than sprints. *(High.)*
+Split consequential activity into four phases:
 
----
+1. **Read:** collect current state with read-only credentials.
+2. **Propose:** generate a structured action plan or diff.
+3. **Verify:** independently check identity, scope, constraints, and expected
+   effect.
+4. **Commit:** execute with a task-scoped credential and capture a receipt.
+
+**Why it works:** It prevents a single misinterpretation from becoming an
+immediate side effect and creates a natural human approval point. It also makes
+retries safer.
+
+**Use for:** CRM updates, outbound messages, publishing, refunds, schedule
+changes, repository merges, and any external write.
+
+### Pattern 3 — Tool contracts plus least privilege
+
+Expose small task-specific tools instead of a general shell or broad connector.
+Make required parameters explicit; reject unknown fields; validate entity IDs
+and versions; and return a typed receipt.
+
+**Required controls:**
+
+- separate read and write tools;
+- allowlisted destinations and action types;
+- task-scoped, short-lived authorization;
+- idempotency key and optimistic concurrency for writes;
+- dry-run/preview output;
+- reversible operation or compensating transaction; and
+- server-side policy enforcement independent of the model.
+
+**Why it works:** Tool calling is comparatively mature in short, typed
+interactions, while multi-turn state and untrusted tool content remain weak
+[S08–S12, 2024–2026, **High**].
+
+### Pattern 4 — Durable execution with idempotent side effects
+
+Checkpoint the graph so a process can pause for approval, survive a crash, and
+resume. Durable runtimes and current agent SDKs expose this as a first-class
+primitive [S34–S36, 2026-07-27, **High** for product features].
+
+**Important caveat:** replay may re-execute model nodes and API calls. A
+checkpoint is not exactly-once execution. External writes still need
+idempotency keys, version checks, and reconciliation [S34, 2026-07-27,
+**High**].
+
+### Pattern 5 — Deterministic collector, probabilistic interpreter
+
+Let schedulers, APIs, database queries, webhooks, and diffs detect that
+something changed. Give the bounded event payload to the model to summarize,
+classify, cluster, or recommend. Do not ask a language model to continuously
+“watch” what conventional software can measure exactly.
+
+**Why it works:** It uses the model for semantic judgment while preserving
+coverage, timing, and deduplication in ordinary software.
+
+### Pattern 6 — Independent verification by the cheapest valid oracle
+
+Choose evaluation in this order:
+
+1. deterministic invariant or exact postcondition;
+2. task-specific statistical detector;
+3. reference comparison or retrieval check;
+4. independent model judge with tools;
+5. human review.
+
+Use human review immediately when consequences are high, criteria are
+value-laden, or no valid oracle exists.
+
+**Why it works:** Task-specific verification can be more accurate and thousands
+of times cheaper than an LLM judge [S27, 2026, **Medium**]. Independence matters:
+same-context self-critique is not an external control.
+
+### Pattern 7 — Risk-tiered autonomy
+
+Classify actions using at least:
+
+- read versus write;
+- reversible versus irreversible;
+- private versus public;
+- known destination versus open destination;
+- financial/legal/safety impact;
+- exposure to untrusted input;
+- confidence and evidence quality; and
+- detectability and recoverability of failure.
+
+Example policy:
+
+- **Tier 0:** draft only.
+- **Tier 1:** autonomous read and internal classification.
+- **Tier 2:** reversible write with deterministic verification and sampling.
+- **Tier 3:** preview plus human approval.
+- **Tier 4:** prohibited from autonomous execution.
+
+This follows current OpenAI, Anthropic, and NIST guidance and the project’s
+governance constraint [S01–S02; S13–S14; S32–S33].
+
+### Pattern 8 — Centralized multi-agent work only for real parallelism
+
+A coordinator owns the shared typed state and decomposes only independent
+subtasks. Workers receive minimal context, produce contracted artifacts, and
+cannot directly mutate shared external state. The coordinator validates and
+merges their outputs.
+
+**Use when:** independent source searches, candidate generation, isolated test
+creation, or distinct specialist analyses can run in parallel.
+
+**Do not use when:** each step depends on the full output and hidden reasoning
+of the previous step, or when workers share mutable external state. Sequential
+tasks show 39–70% degradation in the cited scaling study [S29, 2026,
+**Medium-High**].
+
+### Pattern 9 — Observability, replay, and a production evaluation loop
+
+Record:
+
+- prompt/config/model and tool versions;
+- input provenance and trust level;
+- state transitions and tool arguments;
+- approvals, refusals, and escalations;
+- external receipts and postcondition results;
+- token, latency, tool, and human-review cost;
+- user correction and business outcome; and
+- privacy-appropriate trace retention.
+
+Maintain a golden set from real failures, run it before changes, deploy canaries,
+and compare outcome distributions rather than a few polished transcripts.
+Adoption without this loop creates a reactive production system; 74% of the
+cited production sample still rely mainly on human evaluation [S03, 2026,
+**High**].
 
 ## 4. Hard Limits (critical section)
 
-These are the walls. Each is stated as a constraint on what can be *sold*, with the
-evidence and the design consequence.
+### Limit 1 — Stochastic output and repeated reliability
 
-### L1. Long-horizon autonomy on realistic multi-application work
-**The wall:** 20.6% task completion at the frontier on OSWorld 2.0; ~66% on the earlier,
-easier OSWorld revision against a 72.4% human baseline. A single benchmark revision toward
-realism cut success roughly 3×. METR's 50%-reliability horizons (14–20h) are *coin-flip*
-horizons on *well-specified algorithmic software tasks* judged against a *low-context* human,
-and METR states measurements above 16h are unreliable with its current task suite.
-*(OSWorld 2.0 2026-06-26 — **High**; METR 2026-05-08 — **High** for caveats, **Medium**
-for figures.)*
-**Consequence:** you cannot sell "the agent runs your operation." You can sell "the agent
-runs these eleven named steps, and here is the log." The extrapolation that horizons double
-every ~4 months is real but must not be built into a business plan: the doubling is measured
-on the narrow task family above, and the metric's own ceiling has been reached.
+A model may succeed often while still being unsuitable for a recurring process.
+If a step succeeds with probability 0.95 and ten independent steps must all
+succeed, the simple compounded probability is about 0.60. Real errors are not
+independent and can cascade, so this is only an illustration.
 
-### L2. Prompt injection and connector security
-**The wall:** >60% (up to 72%) attack success across 45 live MCP servers and 353 real tools;
-most-resistant model refuses poisoned tool calls <3% of the time; host-side MCP attacks >80%;
-a systemic multi-language MCP vulnerability disclosed May 2026. *(**High**; scale **Medium**.)*
-**Consequence:** this is not a residual risk to be documented — it is a **design
-constraint that dictates architecture** (see P3). For a solo operator with no security team
-and personal liability, any product where a customer's counterparty can write text that
-reaches a credentialed agent must be architected on the two-context rule or not built.
+Use pass^k or repeated-run consistency in addition to pass@1. τ-bench’s retail
+pass^8 below 25% illustrates why a good one-shot transcript is insufficient
+[S25, 2025, **High**]. Reliability should be reported across consistency,
+robustness, predictability, and safety, not as one benchmark number [S04, 2026,
+**High**].
 
-### L3. Calibration — models do not know when they are wrong
-**The wall:** extraction accuracy degrades sharply on poor inputs *without a corresponding
-drop in stated confidence*; self-critique cannot detect the model's own confabulations;
-LLM judges show reliability without validity. *(**High** across §2.2, §2.11.)*
-**Consequence:** confidence scores from models are not routing signals. Only deterministic
-checks produce trustworthy confidence. **If you cannot verify it in code, you cannot
-automate it.** This single sentence eliminates the majority of superficially attractive AI
-product ideas, and doing that elimination early is the point of this map.
+### Limit 2 — Horizon and error accumulation
 
-### L4. The jagged frontier — capability is not uniform within a role
-**The wall:** causal experimental evidence that AI helps on some tasks and *harms*
-performance on others inside the same workflow, and that lower-performing users can be
-harmed by generic AI advice on difficult problems. *(dell'Acqua et al. 2026; Kenyan
-entrepreneurs RCT — both in project corpus — **High**.)*
-**Consequence:** delegate per task, never per role. "AI [job title]" as a product framing
-is contradicted by the strongest causal evidence available. Also: an AI advisor product
-aimed at less-experienced operators can make their outcomes *worse* — directly relevant if
-this project targets small-business owners.
+Long workflows require retaining constraints, interpreting new evidence,
+recovering from partial failure, and knowing when to stop. OSWorld 2.0’s 20.6%
+strict completion on tasks averaging 318 tool calls is the clearest current
+warning [S06, 2026, **Medium-High**].
 
-### L5. Multi-agent coordination
-**The wall:** 14 failure modes, 1,600+ annotated traces, 7 frameworks; benchmark gains
-"often minimal"; failures traced to system design rather than model quality.
-*(MAST — **High**.)*
-**Consequence:** architectural simplicity is a competitive advantage, not a compromise.
+Mitigation reduces exposure—it does not remove the limit:
 
-### L6. Cross-session memory has no trustworthy evidence base
-**The wall:** every number is a vendor number; the two leading vendors publicly dispute
-each other on the same benchmark; a 100× spread in reported token footprint; documented
-retrieval-latency behaviour that breaks real-time use; sycophantic memory drift newly
-identified (MemSyco-Bench, 2026-07). *(**High** that independent evidence is absent.)*
-**Consequence:** durable customer facts go in a typed database with last-confirmed
-timestamps and invalidation rules. Memory frameworks are a retrieval convenience only.
+- shorten model-controlled segments;
+- externalize state;
+- checkpoint and verify after each stage;
+- stop after repeated failures;
+- ask rather than guess; and
+- convert GUI work into APIs or terminal operations.
 
-### L7. Regulatory, liability and exclusion boundaries (project-specific)
-The Continuity constraints exclude clinical health expertise, childcare for small children,
-supplements, high-stakes legal/financial products, food, and anything with significant
-injury or large-financial-loss risk. The capability evidence *independently* reaches the
-same place: confabulation makes domain-claim generation 3/10 (§2.5), and irreversible
-high-stakes action is exactly where verification is weakest. **The constraints and the
-capabilities agree, which is a good sign the constraints are well-chosen.** *(**High**.)*
+### Limit 3 — Hidden environment state
 
-### L8. Economic limits, stated honestly
-- Token cost is negligible for §2.1, 2.2, 2.5, 2.6 and material only where consumption is
-  superlinear in horizon: long-context re-reading, retry storms, multi-agent chatter,
-  judge-at-volume. **Cost discipline is horizon discipline.**
-- **Failed runs cost full price.** At 20.6% completion, an open-ended long-horizon product
-  pays ~5× per delivered outcome, before support cost.
-- The genuinely new economic fact of 2026 is **voice at ~$0.07/min** *(**Medium**)* —
-  cheap enough that inbound-call capture becomes viable for a single-location business,
-  which was not true two years ago.
+Models observe partial representations: a screenshot, DOM subset, terminal
+window, tool response, or compressed history. They do not inherently know that
+a modal opened, a session expired, a write partially succeeded, or another
+actor changed the record.
 
-### L9. The measurement gap between benchmarks and production
-**The wall:** UTBoost shows SWE-bench test suites are insufficiently rigorous, making
-reported scores optimistic; the AI Index reports broad adoption alongside limited agentic
-deployment; the Anthropic Economic Index notes task success rates are *not published* for
-the current period. *(**High**, **Medium**, **High** respectively.)*
-**Consequence:** benchmark numbers set an *upper bound*, never an expectation. Your own
-golden set on your own workflow is the only number that matters — and building it is cheap
-and is the thing almost nobody does.
+Machine-readable interfaces outperform GUIs because state and errors are more
+explicit [S06–S08, 2026, **Medium-High**]. For important processes, query the
+source of truth after action rather than infer success from the interface.
 
----
+### Limit 4 — Prompt injection and confused-deputy risk
+
+An agent can encounter instructions inside webpages, emails, files, tool
+descriptions, or tool outputs. If the same model also holds permissions, the
+untrusted content can redirect those permissions. Current MCP security results
+show high attack success even in leading models [S10–S12, 2024–2026,
+**High**].
+
+There is no prompt that solves this. Required controls include trust-zone
+separation, least privilege, data-flow restrictions, allowlists, approval for
+consequential writes, server-side policy, and adversarial testing.
+
+### Limit 5 — False success and invalid evaluators
+
+Agents frequently claim success when the external task failed. LLM judges can
+share the same blind spots, and benchmark tests can be incomplete. False
+success constitutes a large share of observed failures in recent analysis
+[S27, 2026, **Medium**], while UTBoost finds hundreds of erroneous patches
+previously labeled passed [S23, 2025, **High**].
+
+The completion signal must come from an outcome oracle: external state,
+customer confirmation, independently strengthened tests, or a task-specific
+detector.
+
+### Limit 6 — Memory freshness, provenance, and deletion
+
+Large context is not durable memory. Semantic retrieval can return a related
+but stale or wrong-entity fact. Automatic memory may store an inference as a
+fact or preserve information that should be deleted.
+
+Keep transactional state in a database; attach source, entity, validity period,
+and confidence to retrieved facts; make user preferences visible/editable; and
+apply retention and deletion policies outside the model.
+
+### Limit 7 — Benchmark validity and transfer
+
+Benchmarks select tasks, environments, tools, and evaluators. Scores may rise
+because tests are weak, tasks leaked, environments simplified, or scaffolds are
+benchmark-specific. The corrected τ2 task set and UTBoost results demonstrate
+that evaluation definitions themselves can be wrong [S23, **High**; S25,
+**High**].
+
+Production decisions need local evaluations on the actual task distribution,
+permissions, languages, error costs, and interfaces.
+
+### Limit 8 — Cost and latency variance
+
+Agent costs are distributions, not fixed per-request prices. Long context,
+reasoning tokens, retries, search calls, computer-use steps, failed attempts,
+verification, and human exception handling can dominate.
+
+Compare:
+
+`cost per verified outcome = (model + tools + infrastructure + review +
+failure recovery) / verified successful outcomes`
+
+Do not compare only model price per token. Batch and cached input can reduce
+token charges by about 50% on current major platforms, but they do not reduce
+failure-recovery or supervision cost [S38–S40, 2026-07-27, **High**].
+
+### Limit 9 — Goals, values, judgment, and relationships
+
+Models optimize the specification they receive. They do not own the
+organization’s values, customer relationship, reputation, or risk appetite.
+Open-ended strategy and negotiation contain unspoken priorities and exceptions
+that are difficult to encode or verify.
+
+Use models to create options, surface evidence, and draft decisions. Keep
+authority with a named human for consequential tradeoffs and relationship
+ownership.
+
+### Limit 10 — Irreversible, regulated, and physical consequences
+
+Where a failure can cause injury, major financial loss, legal exposure,
+clinical harm, or irreversible public action, today’s agents should not be the
+final authority. This project additionally excludes clinical health, small-child
+childcare, supplements, high-stakes finance/legal/real estate, food products,
+and significant physical-safety exposure [S01, 2026-07, **High** internal].
+
+### Limit 11 — Multilingual and geographic evidence gaps
+
+Most benchmarks and production reports are English- and US-heavy. Translated
+evidence can degrade retrieval, calibration, and citation quality [S18,
+2026-06, **Medium**]. Vietnam-specific interfaces, policy language, naming
+conventions, messaging platforms, and data availability require local testing.
+An English benchmark score should not be treated as evidence for Vietnamese
+production reliability.
 
 ## 5. Tool & Platform Landscape (July 2026)
 
-Confidence on this section is **Medium** overall: the landscape is well-reported but almost
-entirely by vendors and vendor-adjacent media. Prices and positioning must be re-checked
-against vendor pages before any commitment (raw log §C, debt 3).
+### 5.1 Foundation-model API snapshot
 
-### 5.1 Models
-| Tier | Reported price /1M tok (in/out) | Where it fits in an ABM |
-|---|---|---|
-| Frontier | ~$5 / $25–30 | Planning, hard reasoning, judge-of-record, novel-situation handling. Use sparingly, at named nodes |
-| Strong mid-tier | ~$1–2.50 / $6–15 (one flagship mid-tier on promo at $2/$10 until 2026-08-31, reverting to $3/$15) | **The workhorse.** Almost all §2.1/2.2/2.5/2.6 work belongs here |
-| Small/cheap | ~$0.10–0.15 / $0.28–0.60 | Classification, routing, extraction of simple fields, high-volume triage |
-| Batch APIs | flat **50%** discount, near-universal | Anything not interactive: overnight monitoring sweeps, backfills, judging |
+Prices are per million tokens at standard rates unless stated otherwise. They
+change frequently and should be rechecked before financial modeling.
 
-Design note: **tier per node, not per product.** A monitoring workflow that routes with a
-$0.10 model and narrates with a mid-tier model costs an order of magnitude less than one
-frontier call per item, at equal output quality — because the expensive judgement is a
-small fraction of the tokens.
+| Provider / current tier | Input | Output | Relevant production notes | Source and confidence |
+|---|---:|---:|---|---|
+| OpenAI GPT-5.6 Sol | $5.00 | $30.00 | High-capability tier; 1.05M context listed; cached input discounted | [S38, accessed 2026-07-27, **High**] |
+| OpenAI GPT-5.6 Terra | $2.50 | $15.00 | Mid-tier agentic model | [S38, accessed 2026-07-27, **High**] |
+| OpenAI GPT-5.6 Luna | $1.00 | $6.00 | Lower-cost routing/drafting tier | [S38, accessed 2026-07-27, **High**] |
+| Anthropic Claude Opus 4.8 | $5.00 | $25.00 | High-capability tier; separate tool/search/runtime costs may apply | [S39, accessed 2026-07-27, **High**] |
+| Anthropic Claude Sonnet 5 | $2.00 promotional | $10.00 promotional | Promotion through 2026-08-31; then $3/$15 according to dated page | [S39, accessed 2026-07-27, **High**] |
+| Anthropic Claude Haiku 4.5 | $1.00 | $5.00 | Fast, lower-cost classification/routing tier | [S39, accessed 2026-07-27, **High**] |
+| Google Gemini 3.5 Flash | $1.50 | $9.00 | Batch $0.75/$4.50; grounded search separately metered after allowance | [S40, updated 2026-07-09, **High**] |
 
-### 5.2 Orchestration
-- **LangGraph** — reported 34.5M monthly downloads and positioned as the production default
-  for stateful, durable, auditable graphs, with first-class human-in-the-loop; named
-  enterprise deployments include Klarna, Uber, LinkedIn, BlackRock, JPMorgan, Replit.
-  *(**Medium**.)* Best fit for P1 and P4.
-- **Claude Agent SDK** (renamed from Claude Code SDK, early 2026) — provider-native;
-  reported as the most robust error handling, prioritising reliability and safety defaults
-  over raw speed. *(**Medium**.)* Best fit where the operator is also the developer.
-- **OpenAI Agents SDK** — the productionised successor to Swarm, with sandboxed execution
-  and a harness system. *(**Medium**.)*
-- **Google ADK**, **CrewAI**, **AutoGen/AG2**, **smolagents**, **Pydantic AI**, **DSPy** —
-  the independent/portable tier. CrewAI and AutoGen are the crew-shaped frameworks that
-  §2.12 and MAST advise against for new builds.
-- **Durable execution** (Temporal, Inngest, or Postgres + job runner) — the unglamorous
-  option that satisfies P1 and P4 with no agent framework at all. Genuinely worth
-  considering as the default for a solo operator: fewer moving parts, no framework churn.
-- **The structural split to keep in mind:** provider-native SDKs (one model family, best
-  defaults, lock-in) vs independent frameworks (portable, more glue to maintain). For a
-  solo operator, framework churn is a real cost; prefer the option you can still understand
-  in twelve months.
+**Selection rule:** use the cheapest model that passes the local evaluation for
+that node. Route only ambiguous, high-value cases to frontier models. Expensive
+reasoning on every step is rarely the best production architecture.
 
-### 5.3 Connectors and tool surfaces
-- **MCP** is the de facto standard tool boundary in 2026. It is a *convenience* standard,
-  not a trust standard — MCP connectivity establishes nothing about permissioning
-  (Master Synthesis glossary, and now MCPTox). *(**High**.)*
-- **n8n / Make / Zapier** — the low-code glue layer. The project's own corpus
-  (`2606.29116v2`) characterised real n8n LLM workflows as having **tight action coupling
-  and missing reliability controls** — i.e. the fast path to a working demo and the fast
-  path to L2/L3 exposure. Usable for Tier-0/Tier-1 work; not for credentialed action on
-  untrusted input. *(**High** for the corpus finding.)*
-- **Practical rule:** small hand-curated tool surfaces beat large MCP surfaces (§2.4 row 2).
+### 5.2 Agent harnesses and durable runtimes
 
-### 5.4 Vertical / applied platforms relevant to this project
-- **Customer support:** Intercom Fin, Decagon, Sierra, Lorikeet. Realistic autonomous
-  resolution **40–70%**, driven by intent-mix structure; B2B runs 17–25 points lower.
-  *(**Medium** for the band.)*
-- **Voice:** Retell-class platforms — ~600ms end-to-end, ~$0.07/min, native Cal.com and
-  Google Calendar booking; >800ms causes caller talk-over. *(**Medium**.)* The most
-  commercially interesting new primitive for service businesses.
-- **Document extraction:** frontier vision models plus LlamaParse-class parsers; 97–99% on
-  simple fields, 95–97% on line items, against a 99.9% straight-through-processing
-  threshold for financial fields. *(**Medium**.)*
-- **Memory:** Mem0, Zep, Letta, LangMem — see L6. Use with a database underneath.
-- **Observability/eval:** LangSmith, Braintrust, Phoenix/Arize, Langfuse. Under-adopted
-  relative to their importance; this is where the P2/P4 evidence trail lives, and it is
-  cheap to set up on day one and expensive to retrofit.
+| Tool/platform | What it provides | Production value | Important limit | Source |
+|---|---|---|---|---|
+| OpenAI Agents SDK | Function tools, sessions, handoffs, guardrails, tracing, human approval state, durable-runtime integrations | Small set of inspectable primitives; serializable pause/resume | Feature availability does not validate application safety; tracing has data-governance constraints | [S35, 2026-07-27, **High**] |
+| Claude Managed Agents | Beta managed sandbox, stateful long-running sessions, versioned configuration, tools/MCP/skills/multi-agent | Reduces harness and sandbox operations | Beta; not ZDR or HIPAA eligible on the dated documentation | [S36, 2026-07-27, **High**] |
+| Gemini managed agents | Preview managed harness, tools, long interaction budgets | Reduces infrastructure work; integrated model/tool loop | Preview; documentation itself recommends least privilege and output verification | [S37, 2026-07-27, **High**] |
+| LangGraph | Graph/state abstraction, checkpoints, persistence, interrupts, human-in-loop | Explicit state and resumable processes | Replay may re-execute later nodes and side effects; application owns idempotency | [S34, 2026-07-27, **High**] |
+| Temporal, DBOS, Restate, Dapr | Durable ordinary-code workflow execution | Strong state, retries, timers, recovery, operational history | Requires explicit integration with model/tool policy and evaluators | [S35, 2026-07-27, **High** for listed integrations] |
+| Low-code automation platforms | Deterministic connectors, schedules, triggers, approvals | Good workflow shell for low-risk administrative processes | Connector permissions, schema drift, and opaque retry semantics require review | Vendor features; **Medium** |
 
-### 5.5 Market context (Low confidence, direction only)
-Agent-platform market reported at $7.84B (2025) projected to $52.62B (2030) at 46.3% CAGR;
-Gartner projecting 40% of enterprise applications to feature task-specific agents by
-end-2026, up from <5% in 2025. *(**Low** — analyst projections with unverifiable
-methodology.)* Included only to note that the tooling layer is consolidating fast, which
-argues for building on boring, replaceable infrastructure rather than on a specific
-framework's abstractions.
+No harness makes the model reliable. The harness makes state, permissions,
+retries, and review points governable.
 
----
+### 5.3 Tool interfaces
+
+| Interface | Best use | Reliability profile | Guidance |
+|---|---|---|---|
+| Typed function/API call | Production read/write against known systems | Highest when schemas and postconditions are strict | Default choice |
+| MCP server | Standardized discovery and tool/resource integration | Operationally useful; expands trust and injection surface | Curate servers/tools, pin versions, isolate trust, least privilege |
+| Terminal | Code, data, and infrastructure tasks with textual feedback | Stronger than GUI; commands can have broad blast radius | Sandbox, allowlist, working-directory boundary, diff/test gates |
+| Browser DOM automation | Known web application with stable selectors | Better than pixels, vulnerable to UI/schema change | Prefer official API; assert page state and result |
+| Pixel-based computer use | Legacy application or human-only interface | Lowest current long-horizon reliability | Use for assisted operation; frequent checkpoints and approval |
+
+### 5.4 Evaluation and observability stack
+
+A minimum production stack needs:
+
+1. versioned prompt/model/tool configuration;
+2. trace IDs across model, tools, and external systems;
+3. deterministic postconditions and receipts;
+4. a local golden set including real failures and adversarial cases;
+5. repeated-run reliability and cost distributions;
+6. human-escalation, correction, and override metrics;
+7. privacy-aware trace retention and deletion; and
+8. canary release and rollback.
+
+Current SDKs and platforms expose tracing and evaluation primitives, but the
+team must define valid outcomes. A beautiful trace of an invalid task is still
+an invalid evaluation.
+
+### 5.5 Adoption context
+
+Stanford HAI reports organizational AI use at 88% in 2026 while noting that
+agent use remains early [S41, 2026, **High**]. This reconciles the apparent
+contradiction between rapid AI adoption and weak evidence for general
+autonomy: companies broadly use AI, but mature deployments typically constrain
+agents to specific processes and retain human evaluation [S03, 2026, **High**].
 
 ## 6. Open Gaps & Research Frontiers
 
-Ordered by value to this project. Each of these is simultaneously a knowledge gap and a
-potential source of advantage — a gap in the public evidence base is a gap in every
-competitor's plan too.
+### 6.1 Independent longitudinal production evidence
 
-**G1. Injection-resistant architectures for small operators.** The literature documents the
-attack thoroughly and the defence barely. There is no widely-adopted reference pattern for
-"a two-person business safely lets an agent read customer email and write to its CRM."
-P3 is the right shape; a tested, documented implementation of it would be a genuine asset.
-**Highest-value gap for this project.**
+The field lacks neutral datasets tracking real agents over months across
+failure frequency, human intervention, rollback, cost, and customer outcome.
+Vendor case studies can show possibility, but not base rates or transfer.
 
-**G2. Independent agent-memory benchmarking.** L6 is a hole in the public record, not a
-finding about capability. Anyone who measures memory systems credibly on a real business
-workload — a service business's client history, say — would be first.
+**Research need:** anonymized incident and outcome reporting by task class,
+risk tier, interface, model, workflow length, and verification method.
 
-**G3. Per-workflow autonomy measurement for micro-businesses.** The reliability literature
-(`2602.16666v3`, `2512.04123v4`) is written for enterprises with platform teams. There is
-no published methodology for a solo operator to measure and safely expand autonomy on
-a single workflow. Continuity §8 requires exactly this instrumentation (≥70% task autonomy
-with cost, success rate, intervention frequency). **Building it is a prerequisite, and it
-may be productisable in its own right.**
+### 6.2 Reliability at strict thresholds
 
-**G4. The tooling-attention asymmetry, quantified.** The Economic Index numbers in §1.7
-(Personal Care & Service 1.23% of usage; hairdressing tasks 0.02%, rank 318/718; against
-Computer & Mathematical 23.8%) are the strongest quantitative whitespace signal found in
-this pass. They need careful handling — the dataset measures *usage of tasks*, not people
-or jobs, and cannot speak to employment — but as a measure of where AI attention is
-*pointed*, the asymmetry is stark and directly serves Map 2. **Carry this into
-`04-Cross-Analysis/`.**
+Benchmarks emphasize average task success. Business processes often need
+99%+ detection and recovery, not 60–80% unverified completion.
 
-**G5. Reliability of outbound customer communication.** §2.8 has a good evidence base for
-*inbound* resolution and almost none for *outbound* correctness (right person, right
-detail, right time, no duplicates). Outbound is the better first product for the reasons
-given, and the metric that matters is unpublished. Measure it yourself.
+**Research need:** pass^k, worst-group performance, tail latency, recovery rate,
+false-success rate, and cost per verified outcome.
 
-**G6. Cost per *delivered outcome*, not per token.** No source found reports cost per
-successfully completed workflow including failed retries. At 20.6% completion on hard
-tasks, this is a ~5× multiplier that no published pricing analysis accounts for.
+### 6.3 Execution-control security
 
-**G7. Verification-first task taxonomy.** L3 implies the decisive question for any candidate
-workflow is "can a program check the output?" A systematic taxonomy of business tasks by
-*verifiability* would be a better idea-generation instrument than the capability list in
-§2. Suggest building it in `04-Cross-Analysis/` as the screening filter before scoring
-micro-ABMs.
+Prompt injection remains a fundamental problem when untrusted data and
+privileged action share a model context.
 
-**G8. Model-independence as a design goal.** Algorithmic monoculture is named in the
-Master Synthesis glossary as correlated-failure exposure, and 2026's price and capability
-churn (a mid-tier flagship's price changing on 2026-08-31 mid-project) makes provider
-lock-in a live operational risk. Unstudied for solo operators; cheap to design for now,
-expensive later.
+**Research need:** information-flow control, capability-secure tool tokens,
+provenance/taint tracking, secure content transformation, policy enforcement
+outside the model, and standardized adversarial suites for real connectors.
 
----
+### 6.4 Valid, economical outcome verification
 
-## Verification debts carried forward
+Self-critique and general LLM judges are not sufficient. Many tasks lack an
+inexpensive external oracle.
 
-Recorded in full at `99-Raw-Extractions/AI-Capabilities-Claude-2026-07-26.md` §C. The four
-that most affect this map:
-1. Pin exact METR 50%/80% horizons from the interactive chart (the §1.1 figures are Medium,
-   not High, only because of this).
-2. Fetch the Stanford AI Index 2026 primary PDF; replace all §1.3 secondary citations.
-3. Re-verify all §5.1 pricing against vendor pages.
-4. Find any non-vendor agent-memory benchmark, or state its absence as a finding (L6).
+**Research need:** automatically synthesized task-specific verifiers,
+postcondition contracts, uncertainty-aware escalation, and methods for proving
+that tests measure the intended outcome.
 
----
+### 6.5 Transactional memory and provenance
 
-## Sources
+Memory benchmarks increasingly test conversational recall, but production needs
+entity correctness, freshness, conflict resolution, deletion, provenance, and
+transactional update semantics.
 
-Primary and high-trust:
-- [METR — Task-Completion Time Horizons](https://metr.org/time-horizons/) (page updated 2026-05-08); [Clarifying limitations of time horizon](https://metr.org/notes/2026-01-22-time-horizon-limitations/); [Time Horizon 1.1](https://metr.org/blog/2026-1-29-time-horizon-1-1/); [original method paper](https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/)
-- [OSWorld 2.0: Benchmarking Computer Use Agents on Long-Horizon Real-World Tasks](https://s46486.pcdn.co/wp-content/uploads/2022/01/OSWorld2.0.pdf) (2026-06-26); project note `05-Previous-Research/Individual-Papers/2606.29537v2.md`
-- [Why Do Multi-Agent LLM Systems Fail? (MAST)](https://arxiv.org/abs/2503.13657), NeurIPS 2025; [MAST repo](https://github.com/multi-agent-systems-failure-taxonomy/MAST)
-- [MCPTox: A Benchmark for Tool Poisoning Attack on Real-World MCP Servers](https://ojs.aaai.org/index.php/AAAI/article/view/40895/44856), AAAI
-- [Reliability without Validity: A Systematic, Large-Scale Evaluation of LLM-as-a-Judge Models](https://arxiv.org/abs/2606.19544) (2026-06)
-- [UTBoost: Rigorous Evaluation of Coding Agents on SWE-Bench](https://arxiv.org/abs/2506.09289)
-- [Anthropic Economic Index](https://www.anthropic.com/economic-index) — CC BY 4.0, period 2026-05-01, snapshot 2026-06-24; accessed 2026-07-26
-- [MemSyco-Bench: Benchmarking Sycophancy in Agent Memory](https://arxiv.org/pdf/2607.01071) (2026-07)
-- [SWE-bench Verified](https://www.swebench.com/verified.html)
-- Project corpus (`05-Previous-Research/`): `2506.17339v2` AI Is the Strategy · `2502.00009v1` The Solo Revolution · `2512.04123v4` Measuring Agents in Production · `2602.16666v3` Science of AI Agent Reliability · `2603.18916v3` Agentic BPM · `2605.10291v1` GenAI Fuels Solo Entrepreneurship · `dell-acqua-et-al-2026` Jagged Technological Frontier · `2308.00352v7` MetaGPT · `2501.07834v2` Flow · `2406.13352v3` AgentDojo · `2606.29116v2` n8n workflow characterization · `2403.08399v2` Multi-agent SLR · `a-practical-guide-to-building-agents` · `NIST.AI.600-1` · `chatgpt-kenyan-entrepreneurs` · `2307.07924v5` ChatDev
+**Research need:** long-lived benchmarks where facts change, permissions differ,
+users correct the system, and deleted information must not reappear.
 
-Secondary (Medium confidence, verification debts noted):
-- Stanford AI Index 2026 via [Forbes, 2026-04-14](https://www.forbes.com/sites/stevenwolfepereira/2026/04/14/stanfords-ai-report-card-agents-are-ready-companies-are-not/) and [SAPinsider](https://sapinsider.org/blogs/stanford-ai-index-2026-enterprise-ai-readiness-governance-risk/)
-- Pricing aggregators, July 2026: [TLDL](https://www.tldl.io/resources/llm-api-pricing), [Morph](https://www.morphllm.com/llm-api), [Developers Digest](https://www.developersdigest.tech/blog/frontier-model-api-pricing-june-2026)
-- Support-automation benchmarks: [Lorikeet, 2026](https://www.lorikeetcx.ai/articles/resolution-rate-ai-customer-support-benchmarks-2026)
-- Document extraction: [aimultiple invoice OCR benchmark](https://research.aimultiple.com/invoice-ocr/), [Vellum](https://www.vellum.ai/blog/document-data-extraction-llms-vs-ocrs)
-- Voice latency and pricing: [Trillet latency benchmarks](https://trillet.ai/blogs/voice-ai-latency-benchmarks), [Retell AI](https://www.retellai.com/blog/best-ai-voice-platforms-virtual-receptionists)
-- Memory vendor claims (Low, disputed): [Mem0 2026 benchmark report](https://mem0.ai/blog/state-of-ai-agent-memory-2026)
-- Framework landscape: [Morph agent frameworks 2026](https://www.morphllm.com/ai-agent-framework), [Firecrawl open-source frameworks](https://www.firecrawl.dev/blog/best-open-source-agent-frameworks)
-- MCP security incident reporting: [Practical DevSecOps](https://www.practical-devsecops.com/mcp-security-vulnerabilities/), [ITECS](https://itecsonline.com/post/mcp-tool-poisoning-enterprise-ai-agent-security-2026)
+### 6.6 Benchmark integrity and contamination
 
-Rejected sources are listed by name with reasons in `99-Raw-Extractions/AI-Capabilities-Claude-2026-07-26.md` §A.
+Corrected task sets and strengthened tests show that benchmarks can overstate
+progress.
+
+**Research need:** continuously refreshed private test sets, independent
+evaluator audits, environment reproducibility, contamination disclosure, and
+production-task transfer studies.
+
+### 6.7 Conditional science of multi-agent systems
+
+Recent evidence begins to explain when multiple agents help: genuine
+parallelism, centralized state, diversity that adds information, and objective
+merge rules.
+
+**Research need:** predictive measures of decomposability, communication cost,
+error correlation, and the threshold at which one stronger model is cheaper
+and more reliable than several weaker agents.
+
+### 6.8 Multilingual and Vietnam-specific evaluation
+
+Current benchmarks underrepresent Vietnamese language, local software
+interfaces, administrative norms, and customer-service expectations.
+
+**Research need:** Vietnamese retrieval and citation benchmarks, mixed
+Vietnamese-English entity handling, Zalo/social-commerce workflows, local
+document layouts, and culturally appropriate escalation—with the same strict
+project exclusions and privacy controls.
+
+### 6.9 Agent unit economics
+
+Token prices are falling, but long contexts, tool calls, retries, verification,
+and human exceptions can dominate.
+
+**Research need:** standardized reporting of cost per verified outcome,
+supervision minutes, cleanup cost, latency percentiles, and value of failures
+prevented.
+
+### 6.10 Human skill and organizational learning
+
+The operator remains part of system performance. A large Anthropic
+observational study reports verified coding success of 15% for novice users
+versus 28–33% for intermediate/expert users [S24, 2026-06-16, **Medium**].
+
+**Research need:** interfaces that expose uncertainty and state, teach operators
+when to intervene, convert corrections into tests, and preserve human expertise
+rather than hide it behind an anthropomorphic agent.
+
+### 6.11 Safe communication and relationship continuity
+
+Grounded FAQ and triage are mature, but complaint handling, vulnerable users,
+retention, and negotiation remain difficult to verify and reputationally
+sensitive.
+
+**Research need:** relationship-preserving escalation, truthful disclosure,
+emotion/urgency recognition without sensitive profiling, and longitudinal
+customer-outcome measures.
+
+### 6.12 The solo-operator frontier
+
+For a solo ABM, the key metric is not “how autonomous is the agent?” but “how
+much verified work can one owner safely supervise?”
+
+**Research need:** an autonomy-adjusted leverage metric incorporating:
+
+- verified outcomes per owner-hour;
+- exception and correction rate;
+- maximum plausible loss per action;
+- detectability and recoverability;
+- customer trust and retention;
+- total cost per verified outcome; and
+- how quickly a failure becomes a reusable test or rule.
+
+The near-term frontier is therefore **supervised leverage**, not ownerless
+operation.
+
+## Source Register
+
+### Project governance and synthesis
+
+**[S01]** AgentMindCloud, `00-Meta/ABM-Project-Continuity.md`, updated 2026-07.
+Internal primary project document. **Confidence: High** for project constraints.
+
+**[S02]** AgentMindCloud,
+`05-Previous-Research/Master-Synthesis.md`, 2026-07. Synthesis of 28 prior
+research papers. **Confidence: High** for the recorded project synthesis;
+individual external claims retain their original source quality.
+
+### Production, reliability, and long horizon
+
+**[S03]** Chen et al., “Measuring Agents in Production,” arXiv:2512.04123 v4,
+2026-06-04; accepted as ICML 2026 Oral.
+https://arxiv.org/abs/2512.04123
+20 case studies; 86 practitioners; 26 domains; 68% at most 10 steps; 70%
+off-the-shelf prompting; 74% human evaluation. **Confidence: High**.
+
+**[S04]** “Towards a Science of Agent Reliability,” arXiv:2602.16666 v3,
+2026-06-02; accepted at ICML 2026.
+https://arxiv.org/abs/2602.16666
+15 models, 12 metrics, two benchmarks. **Confidence: High**.
+
+**[S05]** METR, “Time Horizons,” updated 2026-05-08.
+https://metr.org/time-horizons/
+Official methodology and measurement caveats. **Confidence: High**.
+
+**[S06]** “OSWorld 2.0,” arXiv:2606.29537 v2, 2026-07-13.
+https://arxiv.org/abs/2606.29537
+Current long-horizon computer-use benchmark. **Confidence: Medium-High**
+(preprint).
+
+**[S07]** “TUA-Bench,” arXiv:2606.28480, 2026-06.
+https://arxiv.org/abs/2606.28480
+120 real terminal/UI tasks. **Confidence: Medium** (preprint).
+
+### Tool use and security
+
+**[S08]** UC Berkeley Gorilla, “Berkeley Function-Calling Leaderboard v4,”
+updated 2026-04-12.
+https://gorilla.cs.berkeley.edu/leaderboard
+Official live leaderboard snapshot. **Confidence: High**.
+
+**[S09]** Patil et al., “Berkeley Function-Calling Leaderboard,” ICML 2025,
+PMLR 267.
+https://proceedings.mlr.press/v267/patil25a.html
+Peer-reviewed benchmark paper. **Confidence: High**.
+
+**[S10]** “MCPTox,” AAAI 2026, published 2026-03-14.
+https://ojs.aaai.org/index.php/AAAI/article/view/40895
+45 live MCP servers and 1,348 cases. **Confidence: High**.
+
+**[S11]** “MCP-SafetyBench,” ICLR 2026 / arXiv:2512.15163.
+https://openreview.net/forum?id=7XYjeL46co
+Five domains and 20 attack types. **Confidence: High**.
+
+**[S12]** Debenedetti et al., “AgentDojo,” arXiv:2406.13352, 2024-06-19.
+https://arxiv.org/abs/2406.13352
+97 tasks and 629 security cases. **Confidence: High**; **older than preferred
+window**.
+
+**[S13]** NIST, “Strengthening AI Agent Hijacking Evaluations,” 2025-01-17.
+https://www.nist.gov/news-events/news/2025/01/technical-blog-strengthening-ai-agent-hijacking-evaluations
+Official technical guidance. **Confidence: High**.
+
+**[S14]** NIST AI 600-1, “Artificial Intelligence Risk Management Framework:
+Generative Artificial Intelligence Profile,” published 2024-07-26; updated
+2026-04-08.
+https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence
+Official risk-management profile. **Confidence: High**; foundational 2024
+source.
+
+### Research, synthesis, and extraction
+
+**[S15]** “DeepResearch Bench,” arXiv:2506.06287, 2025-06.
+https://arxiv.org/abs/2506.06287
+89 tasks with frozen retrospective search. **Confidence: Medium** (preprint).
+
+**[S16]** “DeepResearchBench,” arXiv:2506.11763, 2025-06.
+https://arxiv.org/abs/2506.11763
+100 PhD-level tasks across 22 fields. **Confidence: Medium** (preprint).
+
+**[S17]** “DREAM: The Mirage of Synthesis,” ACL 2026 Long Paper.
+https://aclanthology.org/2026.acl-long.448/
+Peer-reviewed evaluation of deep-research outputs. **Confidence: High**.
+
+**[S18]** “Cross-lingual BrowseComp Plus,” arXiv:2606.15345, 2026-06.
+https://arxiv.org/abs/2606.15345
+Cross-lingual retrieval/citation degradation. **Confidence: Medium** (preprint).
+
+**[S19]** “Structured Output Benchmark,” arXiv:2604.25359, 2026-04-28.
+https://arxiv.org/abs/2604.25359
+21 models across text, document images, and audio. **Confidence: Medium**
+(preprint).
+
+**[S20]** “READoc,” Findings of ACL 2025.
+https://aclanthology.org/2025.findings-acl.1128/
+3,576 real documents. **Confidence: High**.
+
+**[S21]** UC Berkeley, “TWIX,” technical report, 2025-05-15.
+https://digicoll.lib.berkeley.edu/record/320827
+Hybrid template-inference/extraction system. **Confidence: Medium-High**.
+
+### Code and outcome evaluation
+
+**[S22]** “GitTaskBench,” AAAI 2026, published 2026-03-14.
+https://ojs.aaai.org/index.php/AAAI/article/view/40533
+54 realistic repository tasks. **Confidence: High**.
+
+**[S23]** “UTBoost,” ACL 2025 / arXiv:2506.09289.
+https://arxiv.org/abs/2506.09289
+Strengthens insufficient software-task tests. **Confidence: High**.
+
+**[S24]** Anthropic Research, “How AI assistance impacts the formation of coding
+expertise,” 2026-06-16.
+https://www.anthropic.com/research/claude-code-expertise
+Large vendor observational study. **Confidence: Medium**.
+
+**[S25]** “τ-bench,” ICLR 2025.
+https://proceedings.iclr.cc/paper_files/paper/2025/hash/1b126cc38b8638e07bef37e7b2bb72bf-Abstract-Conference.html
+Retail and airline tool-agent-user benchmark. **Confidence: High**.
+
+**[S26]** “Building Effective Customer Support Agents,” arXiv:2606.08867,
+2026-06-07.
+https://arxiv.org/abs/2606.08867
+Five Nubank production deployments. **Confidence: Medium** (company-authored
+deployment report).
+
+**[S27]** “Detecting False Success in Tool-Using Agents,” arXiv:2606.09863,
+2026-06-01.
+https://arxiv.org/abs/2606.09863
+9,876 τ2 and 1,879 AppWorld trajectories. **Confidence: Medium** (preprint).
+
+### Multi-agent systems
+
+**[S28]** “MAST: Multi-Agent System Failure Taxonomy,” arXiv:2503.13657,
+2025-03-17.
+https://arxiv.org/abs/2503.13657
+Five frameworks, 150 tasks, 14 failure modes. **Confidence: Medium-High**.
+
+**[S29]** Google Research, “Towards a Science of Scaling Agent Systems,”
+2026-01-28; paper arXiv:2512.08296.
+https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/
+180 configurations across four benchmarks. **Confidence: Medium-High**
+(large preprint plus official research summary).
+
+**[S30]** “Multi-Agent Computer Use,” arXiv:2606.01533, 2026-06.
+https://arxiv.org/abs/2606.01533
+DAG-managed specialists on computer-use benchmarks. **Confidence: Medium**
+(preprint).
+
+### Architecture, platforms, and pricing
+
+**[S31]** Anthropic Engineering, “Building Effective Agents,” 2024-12-19.
+https://www.anthropic.com/engineering/building-effective-agents
+Official engineering guidance consistent with independent evidence.
+**Confidence: Medium-High**; older than preferred window.
+
+**[S32]** OpenAI, “A Practical Guide to Building AI Agents,” current 2026.
+https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/
+Official implementation guidance. **Confidence: Medium-High**.
+
+**[S33]** Anthropic Research, “Building and evaluating trustworthy agents,”
+2026-04-09.
+https://www.anthropic.com/research/trustworthy-agents
+Official safety framework. **Confidence: Medium-High**.
+
+**[S34]** LangChain, LangGraph overview and persistence documentation, accessed
+2026-07-27.
+https://docs.langchain.com/oss/python/langgraph/overview
+https://docs.langchain.com/oss/python/langgraph/persistence
+Official product behavior. **Confidence: High** for features and replay
+semantics.
+
+**[S35]** OpenAI Agents SDK documentation, accessed 2026-07-27.
+https://openai.github.io/openai-agents-python/
+https://openai.github.io/openai-agents-python/human_in_the_loop/
+Official product documentation. **Confidence: High** for features.
+
+**[S36]** Anthropic, Claude Managed Agents documentation, accessed 2026-07-27.
+https://platform.claude.com/docs/en/managed-agents/overview
+https://platform.claude.com/docs/en/managed-agents/agent-setup
+Official beta product documentation. **Confidence: High** for features and
+eligibility constraints.
+
+**[S37]** Google AI for Developers, “Gemini managed agents,” accessed
+2026-07-27.
+https://ai.google.dev/gemini-api/docs/agents
+Official preview product documentation. **Confidence: High** for features.
+
+**[S38]** OpenAI model comparison/pricing, accessed 2026-07-27.
+https://developers.openai.com/api/docs/models/compare
+Official dated price snapshot. **Confidence: High**.
+
+**[S39]** Anthropic pricing, accessed 2026-07-27.
+https://platform.claude.com/docs/en/about-claude/pricing
+Official dated price snapshot. **Confidence: High**.
+
+**[S40]** Google Gemini API pricing, updated 2026-07-09; accessed 2026-07-27.
+https://ai.google.dev/gemini-api/docs/pricing
+Official dated price snapshot. **Confidence: High**.
+
+**[S41]** Stanford HAI, “2026 AI Index Report” and Economy chapter, 2026.
+https://hai.stanford.edu/ai-index/2026-ai-index-report
+https://hai.stanford.edu/ai-index/2026-ai-index-report/economy
+Official report. **Confidence: High**.
+
+## Audit note
+
+The independent extraction supporting this revision is stored in
+`99-Raw-Extractions/AI-Capabilities-ChatGPT-2026-07-27.md`. The prior Claude
+extraction remains in `99-Raw-Extractions/` for comparison. This master favors
+claims that could be traced to primary sources during the 2026-07-27 audit and
+removes attractive precision that could not be verified.
