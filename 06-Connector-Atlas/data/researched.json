@@ -1,0 +1,69 @@
+{
+ "_schema": {
+  "purpose": "Function knowledge for the terse minority whose directory blurb was too thin to stand alone (e.g. Backlog | 'MCP Server', IQLand | 'iqlandaimcp', non-English blurbs). Each entry states what the product actually does, sourced from online research (WebSearch) or established vendor knowledge — never left blank or hedged as a guess. infer.py merges this: it sets the function statement, may override capabilities, and marks confidence DOCUMENTED with the recorded source.",
+  "source_values": {
+   "researched": "confirmed via WebSearch of the vendor's site / press / profiles",
+   "vendor_knowledge": "resolved from established knowledge of the product (incl. non-English blurbs)"
+  }
+ },
+ "entries": {
+  "iqland_official": {
+   "function": "AI real-estate land-development platform: parcel data, construction-ready plans, dynamic KPI analysis, and a marketplace of land-development opportunities for developers, agents and investors.",
+   "capabilities": ["vertical", "bi_visualize"],
+   "source": "researched"
+  },
+  "telgani": {
+   "function": "Saudi car-rental marketplace: compare prices and book rental cars across KSA (daily/monthly/yearly) with ~1-hour delivery and airport pickup.",
+   "source": "researched"
+  },
+  "caretta": {
+   "function": "Realtime AI copilot for live sales calls: transcribes the call, takes notes, and surfaces answers and objection-handling from an organisational knowledge base built from docs, site and playbooks.",
+   "source": "researched"
+  },
+  "syntitan": {
+   "function": "AI-ready data platform (CUBIG): scores whether enterprise data is ready for AI, fixes what blocks it, freezes the result as a versioned release state, and ties every agent run back to the exact data behind it.",
+   "capabilities": ["ai_tools", "database"],
+   "source": "researched"
+  },
+  "graffiticode": {
+   "function": "Platform of deterministic, domain-specific 'smart tools' (spreadsheet logic, geospatial, compliance, assessments) callable via MCP so an agent gets validated, structured results instead of best-effort guesses.",
+   "capabilities": ["ai_tools"],
+   "source": "researched"
+  },
+  "isometric": {
+   "function": "Agentic certification platform for the industrial economy: AI agents cross-check sensor, satellite, supply-chain and lab data to certify carbon-removal and environmental claims, flagging discrepancies for expert review.",
+   "capabilities": ["security", "public_data"],
+   "source": "researched"
+  },
+  "vianexus_vast": {
+   "function": "Agent-ready financial-data marketplace (vAST): market prices, reference data, fundamentals, estimates, news and filings, with entitlement-aware access purpose-built for AI agents. A data feed, not a brokerage.",
+   "capabilities": ["market_data"],
+   "source": "researched"
+  },
+  "amass_connector": {
+   "function": "Life-science scientific-intelligence API: 500M+ documents across biomedical citations, research abstracts, patents, clinical trials and regulatory filings for literature intelligence and scientific Q&A.",
+   "capabilities": ["research_science"],
+   "source": "researched"
+  },
+  "figaro_immobilier": {
+   "function": "French real-estate listings portal (Le Figaro Immobilier): search properties for sale and rent — 'find your ideal property'.",
+   "capabilities": ["vertical"],
+   "source": "vendor_knowledge"
+  },
+  "contract_factory_soci_t_s_siren": {
+   "function": "Official French company information from the RNE (Registre National des Entreprises): firmographics and SIREN/SIRET registry lookups for French businesses.",
+   "capabilities": ["enrich_company", "public_data"],
+   "source": "vendor_knowledge"
+  },
+  "juridata": {
+   "function": "Sourced Moroccan legal research (statutes and case law), built to scale across Africa.",
+   "capabilities": ["legal_research"],
+   "source": "vendor_knowledge"
+  },
+  "backlog": {
+   "function": "Backlog (Nulab): project and issue tracking for software teams — tasks, boards, wikis and Git/SVN repositories.",
+   "capabilities": ["tasks"],
+   "source": "vendor_knowledge"
+  }
+ }
+}

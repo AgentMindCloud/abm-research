@@ -1,0 +1,3250 @@
+{
+ "_schema": {
+  "generated_by": "engine/discover.py",
+  "note": "Working use cases discovered by composing Claude + connector capabilities across scales. Only coherent combos are listed."
+ },
+ "usecases": [
+  {
+   "tier": "small",
+   "name": "Inbox-to-Action Desk",
+   "rating": "strong",
+   "why_short": "Claude reads what comes in via Gmail and turns it into tracked work in Todoist.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "comms",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "gmail": "read",
+     "todoist": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "email",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Meeting Follow-through",
+   "rating": "strong",
+   "why_short": "Claude turns Fireflies into follow-ups and records in Todoist.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "ops",
+    "comms"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Fireflies",
+     "id": "fireflies",
+     "capabilities": [
+      "transcribe_meeting"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "todoist": "mutate",
+     "fireflies": "read"
+    }
+   },
+   "capabilities_covered": [
+    "tasks",
+    "transcribe_meeting"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Research Desk",
+   "rating": "strong",
+   "why_short": "Claude gathers evidence from Exa and writes a durable brief in Notion.",
+   "scale": 2,
+   "n_domains": 1,
+   "domains": [
+    "research"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Exa",
+     "id": "exa",
+     "capabilities": [
+      "web_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "exa": "read",
+     "notion": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "notes_docs",
+    "web_search"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Data-to-Dashboard",
+   "rating": "strong",
+   "why_short": "Claude queries Snowflake and builds the dashboard in Tableau.",
+   "scale": 2,
+   "n_domains": 1,
+   "domains": [
+    "data_bi"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Tableau",
+     "id": "tableau",
+     "capabilities": [
+      "bi_visualize"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Snowflake",
+     "id": "snowflake",
+     "capabilities": [
+      "database"
+     ],
+     "role": "sink",
+     "side_effect": "create"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "create",
+    "observe": "read",
+    "per_connector": {
+     "tableau": "read",
+     "snowflake": "create"
+    }
+   },
+   "capabilities_covered": [
+    "bi_visualize",
+    "database"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Outbound Sales Desk",
+   "rating": "strong",
+   "why_short": "Claude sources and enriches leads via ZoomInfo and runs outbound through HubSpot.",
+   "scale": 2,
+   "n_domains": 1,
+   "domains": [
+    "sales"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "ZoomInfo",
+     "id": "zoominfo",
+     "capabilities": [
+      "enrich_company",
+      "discover_companies"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "HubSpot",
+     "id": "hubspot",
+     "capabilities": [
+      "crm"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "zoominfo": "read",
+     "hubspot": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "crm",
+    "discover_companies",
+    "enrich_company"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Pipeline Cockpit",
+   "rating": "strong",
+   "why_short": "Claude keeps the pipeline in HubSpot moving through Klaviyo.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "sales",
+    "marketing"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "HubSpot",
+     "id": "hubspot",
+     "capabilities": [
+      "crm"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Klaviyo",
+     "id": "klaviyo",
+     "capabilities": [
+      "outreach"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "hubspot": "read",
+     "klaviyo": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "crm",
+    "outreach"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Ship-it Dev Loop",
+   "rating": "strong",
+   "why_short": "Claude reads the repo in Sourcegraph and ships it via Replit.",
+   "scale": 2,
+   "n_domains": 1,
+   "domains": [
+    "product_eng"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Replit",
+     "id": "replit",
+     "capabilities": [
+      "deploy"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Sourcegraph",
+     "id": "sourcegraph",
+     "capabilities": [
+      "code"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "replit": "irreversible",
+     "sourcegraph": "read"
+    }
+   },
+   "capabilities_covered": [
+    "code",
+    "deploy"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Incident War-room",
+   "rating": "strong",
+   "why_short": "Claude watches Datadog and drives the response through Slack.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "comms",
+    "product_eng"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Datadog",
+     "id": "datadog",
+     "capabilities": [
+      "observability"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "slack": "irreversible",
+     "datadog": "read"
+    }
+   },
+   "capabilities_covered": [
+    "messaging",
+    "observability"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Finance Back Office",
+   "rating": "strong",
+   "why_short": "Claude reconciles money movement in Stripe and reports it through Notion.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "research",
+    "finance"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Stripe",
+     "id": "stripe",
+     "capabilities": [
+      "payments"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "stripe": "read",
+     "notion": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "notes_docs",
+    "payments"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Storefront Ops",
+   "rating": "strong",
+   "why_short": "Claude runs the store in Shop end to end with Stripe.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "ops",
+    "finance"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Shop",
+     "id": "shop",
+     "capabilities": [
+      "ecommerce"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Stripe",
+     "id": "stripe",
+     "capabilities": [
+      "payments"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "shop": "irreversible",
+     "stripe": "read"
+    }
+   },
+   "capabilities_covered": [
+    "ecommerce",
+    "payments"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Content Studio",
+   "rating": "strong",
+   "why_short": "Claude produces creative in Canva and ships it through Bitly.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "design",
+    "marketing"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Canva",
+     "id": "canva",
+     "capabilities": [
+      "design"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Bitly",
+     "id": "bitly",
+     "capabilities": [
+      "social_media"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "canva": "mutate",
+     "bitly": "read"
+    }
+   },
+   "capabilities_covered": [
+    "design",
+    "social_media"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Support Desk",
+   "rating": "partial",
+   "why_short": "Claude resolves tickets in Intercom with context from HubSpot.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "sales",
+    "support"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "HubSpot",
+     "id": "hubspot",
+     "capabilities": [
+      "crm"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Intercom",
+     "id": "intercom",
+     "capabilities": [
+      "support_desk"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "read",
+    "observe": "read",
+    "per_connector": {
+     "hubspot": "read",
+     "intercom": "read"
+    }
+   },
+   "capabilities_covered": [
+    "crm",
+    "support_desk"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Recruiting Pipeline",
+   "rating": "strong",
+   "why_short": "Claude sources and screens in Ashby and moves candidates through Gmail.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "hr",
+    "comms"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Ashby",
+     "id": "ashby",
+     "capabilities": [
+      "ats_hiring"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "ashby": "mutate",
+     "gmail": "read"
+    }
+   },
+   "capabilities_covered": [
+    "ats_hiring",
+    "email"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Legal Ops",
+   "rating": "strong",
+   "why_short": "Claude researches and drafts from Harvey and routes for signature via Docusign.",
+   "scale": 2,
+   "n_domains": 1,
+   "domains": [
+    "legal"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Harvey",
+     "id": "harvey",
+     "capabilities": [
+      "legal_research"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Docusign",
+     "id": "docusign",
+     "capabilities": [
+      "esign"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "harvey": "read",
+     "docusign": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "esign",
+    "legal_research"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Trading Desk",
+   "rating": "strong",
+   "why_short": "Claude researches markets in FMP and manages the book in Interactive Brokers (IBKR).",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "data_bi",
+    "finance"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "FMP",
+     "id": "fmp",
+     "capabilities": [
+      "market_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Interactive Brokers (IBKR)",
+     "id": "interactive_brokers_ibkr",
+     "capabilities": [
+      "trading"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "fmp": "read",
+     "interactive_brokers_ibkr": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "market_data",
+    "trading"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Daily Brief",
+   "rating": "strong",
+   "why_short": "Claude assembles a brief from Gmail into Notion.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "comms",
+    "research"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "gmail": "read",
+     "notion": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "email",
+    "notes_docs"
+   ]
+  },
+  {
+   "tier": "small",
+   "name": "Knowledge Hub",
+   "rating": "strong",
+   "why_short": "Claude keeps a living knowledge base in Google Drive, refreshed from Exa.",
+   "scale": 2,
+   "n_domains": 2,
+   "domains": [
+    "comms",
+    "research"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Exa",
+     "id": "exa",
+     "capabilities": [
+      "web_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Google Drive",
+     "id": "google_drive",
+     "capabilities": [
+      "files"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "exa": "read",
+     "google_drive": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "files",
+    "web_search"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Support Desk",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Support operation — Email, Chat / messaging, Notes & docs, Support desk, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 5,
+   "n_domains": 4,
+   "domains": [
+    "comms",
+    "research",
+    "support",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Intercom",
+     "id": "intercom",
+     "capabilities": [
+      "support_desk"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "gmail": "read",
+     "slack": "read",
+     "notion": "mutate",
+     "todoist": "mutate",
+     "intercom": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "email",
+    "messaging",
+    "notes_docs",
+    "support_desk",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Sales Desk",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Sales operation — CRM, Lead discovery, Email, Company enrichment, Chat / messaging, Notes & docs, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 6,
+   "n_domains": 4,
+   "domains": [
+    "sales",
+    "comms",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Clay",
+     "id": "clay",
+     "capabilities": [
+      "enrich_company",
+      "discover_companies"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "HubSpot",
+     "id": "hubspot",
+     "capabilities": [
+      "crm"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [
+    {
+     "name": "ZoomInfo",
+     "status": "fallback",
+     "reason": "redundant: enrich_company, discover_companies already covered — kept only as a fallback."
+    }
+   ],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "clay": "read",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "notion": "mutate",
+     "hubspot": "mutate",
+     "todoist": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "crm",
+    "discover_companies",
+    "email",
+    "enrich_company",
+    "messaging",
+    "notes_docs",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "People & Hiring Ops",
+   "rating": "strong",
+   "why_short": "Claude runs a whole HR & Recruiting operation — Recruiting / ATS / HRIS, Email, Job market, Chat / messaging, Notes & docs, Payroll & benefits, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 6,
+   "n_domains": 4,
+   "domains": [
+    "hr",
+    "comms",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Gusto",
+     "id": "gusto",
+     "capabilities": [
+      "ats_hiring",
+      "payroll"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Indeed",
+     "id": "indeed",
+     "capabilities": [
+      "job_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [
+    {
+     "name": "Ashby",
+     "status": "fallback",
+     "reason": "redundant: ats_hiring already covered — kept only as a fallback."
+    }
+   ],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "gusto": "irreversible",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "indeed": "read",
+     "notion": "mutate",
+     "todoist": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "ats_hiring",
+    "email",
+    "job_search",
+    "messaging",
+    "notes_docs",
+    "payroll",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Legal Ops",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Legal operation — Email, E-signature, Legal research, Chat / messaging, Notes & docs, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 6,
+   "n_domains": 4,
+   "domains": [
+    "comms",
+    "legal",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Harvey",
+     "id": "harvey",
+     "capabilities": [
+      "legal_research"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Docusign",
+     "id": "docusign",
+     "capabilities": [
+      "esign"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "harvey": "read",
+     "notion": "mutate",
+     "todoist": "mutate",
+     "docusign": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "email",
+    "esign",
+    "legal_research",
+    "messaging",
+    "notes_docs",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Comms Command Center",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Comms & Collaboration operation — Calendar, Local machine / OS, Email, Files & storage, Chat / messaging, Meeting transcription — coordinating across all of it from the centre.",
+   "scale": 6,
+   "n_domains": 1,
+   "domains": [
+    "comms"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Fireflies",
+     "id": "fireflies",
+     "capabilities": [
+      "transcribe_meeting"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Filesystem",
+     "id": "filesystem",
+     "capabilities": [
+      "desktop"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Google Drive",
+     "id": "google_drive",
+     "capabilities": [
+      "files"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Google Calendar",
+     "id": "google_calendar",
+     "capabilities": [
+      "calendar"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "fireflies": "read",
+     "filesystem": "mutate",
+     "google_drive": "mutate",
+     "google_calendar": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "calendar",
+    "desktop",
+    "email",
+    "files",
+    "messaging",
+    "transcribe_meeting"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Research Desk",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Research & Knowledge operation — Learning & courses, Knowledge & memory, Notes & docs, Public / gov data, Scientific research, Web search — coordinating across all of it from the centre.",
+   "scale": 6,
+   "n_domains": 1,
+   "domains": [
+    "research"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Exa",
+     "id": "exa",
+     "capabilities": [
+      "web_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Mem0",
+     "id": "mem0",
+     "capabilities": [
+      "knowledge_base"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "PubMed",
+     "id": "pubmed",
+     "capabilities": [
+      "research_science"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "O'Reilly",
+     "id": "o_reilly",
+     "capabilities": [
+      "education"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Anthropic Economic Index",
+     "id": "anthropic_economic_index",
+     "capabilities": [
+      "public_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "exa": "read",
+     "mem0": "mutate",
+     "pubmed": "read",
+     "notion": "mutate",
+     "o_reilly": "read",
+     "anthropic_economic_index": "read"
+    }
+   },
+   "capabilities_covered": [
+    "education",
+    "knowledge_base",
+    "notes_docs",
+    "public_data",
+    "research_science",
+    "web_search"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Finance Back Office",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Finance & Accounting operation — Accounting, Email, Invoicing, Chat / messaging, Notes & docs, Payments, Tasks & projects, Trading & investing — coordinating across all of it from the centre.",
+   "scale": 7,
+   "n_domains": 4,
+   "domains": [
+    "finance",
+    "comms",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Sequence",
+     "id": "sequence",
+     "capabilities": [
+      "accounting",
+      "invoicing"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Stripe",
+     "id": "stripe",
+     "capabilities": [
+      "payments"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Interactive Brokers (IBKR)",
+     "id": "interactive_brokers_ibkr",
+     "capabilities": [
+      "trading"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [
+    {
+     "name": "Xero",
+     "status": "fallback",
+     "reason": "redundant: accounting already covered — kept only as a fallback."
+    }
+   ],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "sequence": "irreversible",
+     "gmail": "read",
+     "slack": "read",
+     "stripe": "read",
+     "notion": "mutate",
+     "todoist": "mutate",
+     "interactive_brokers_ibkr": "read"
+    }
+   },
+   "capabilities_covered": [
+    "accounting",
+    "email",
+    "invoicing",
+    "messaging",
+    "notes_docs",
+    "payments",
+    "tasks",
+    "trading"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Marketing Studio",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Marketing operation — Email, Forms & surveys, Marketing analytics, Chat / messaging, Notes & docs, Outbound campaigns, Social publishing, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 8,
+   "n_domains": 4,
+   "domains": [
+    "marketing",
+    "comms",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Bitly",
+     "id": "bitly",
+     "capabilities": [
+      "social_media"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Klaviyo",
+     "id": "klaviyo",
+     "capabilities": [
+      "outreach"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Semrush",
+     "id": "semrush",
+     "capabilities": [
+      "marketing_analytics"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "SurveyMonkey",
+     "id": "surveymonkey",
+     "capabilities": [
+      "forms"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "bitly": "irreversible",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "notion": "mutate",
+     "klaviyo": "irreversible",
+     "semrush": "read",
+     "todoist": "mutate",
+     "surveymonkey": "read"
+    }
+   },
+   "capabilities_covered": [
+    "email",
+    "forms",
+    "marketing_analytics",
+    "messaging",
+    "notes_docs",
+    "outreach",
+    "social_media",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Data & BI Cockpit",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Data & BI operation — BI & dashboards, Database / warehouse, Email, Market & financial data, Chat / messaging, Notes & docs, Tasks & projects, Weather & geospatial — coordinating across all of it from the centre.",
+   "scale": 8,
+   "n_domains": 4,
+   "domains": [
+    "data_bi",
+    "comms",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "FMP",
+     "id": "fmp",
+     "capabilities": [
+      "market_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Tableau",
+     "id": "tableau",
+     "capabilities": [
+      "bi_visualize"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Snowflake",
+     "id": "snowflake",
+     "capabilities": [
+      "database"
+     ],
+     "role": "sink",
+     "side_effect": "create"
+    },
+    {
+     "name": "TomTom Maps",
+     "id": "tomtom_maps",
+     "capabilities": [
+      "weather_geo"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "fmp": "read",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "notion": "mutate",
+     "tableau": "read",
+     "todoist": "mutate",
+     "snowflake": "create",
+     "tomtom_maps": "read"
+    }
+   },
+   "capabilities_covered": [
+    "bi_visualize",
+    "database",
+    "email",
+    "market_data",
+    "messaging",
+    "notes_docs",
+    "tasks",
+    "weather_geo"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Creative Studio",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Design & Creative operation — Design & brand, Diagrams & whiteboards, Email, Media generation, Chat / messaging, Notes & docs, Presentations, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 8,
+   "n_domains": 4,
+   "domains": [
+    "design",
+    "comms",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Canva",
+     "id": "canva",
+     "capabilities": [
+      "design"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Figma",
+     "id": "figma",
+     "capabilities": [
+      "diagramming"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Gamma",
+     "id": "gamma",
+     "capabilities": [
+      "presentations"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "ElevenLabs",
+     "id": "elevenlabs",
+     "capabilities": [
+      "media_gen"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "mutate",
+    "observe": "read",
+    "per_connector": {
+     "canva": "mutate",
+     "figma": "read",
+     "gamma": "mutate",
+     "gmail": "read",
+     "slack": "read",
+     "notion": "mutate",
+     "todoist": "mutate",
+     "elevenlabs": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "design",
+    "diagramming",
+    "email",
+    "media_gen",
+    "messaging",
+    "notes_docs",
+    "presentations",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Operations Hub",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Operations & Logistics operation — Automation hub, Browser automation, E-commerce store, Email, Local services, Chat / messaging, Notes & docs, Tasks & projects, Travel & booking, Vertical platform — coordinating across all of it from the centre.",
+   "scale": 10,
+   "n_domains": 3,
+   "domains": [
+    "ops",
+    "comms",
+    "research"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "G2",
+     "id": "g2",
+     "capabilities": [
+      "vertical"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Make",
+     "id": "make",
+     "capabilities": [
+      "automate_hub"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Uber",
+     "id": "uber",
+     "capabilities": [
+      "travel_booking"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Shop",
+     "id": "shop",
+     "capabilities": [
+      "ecommerce"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Apify",
+     "id": "apify",
+     "capabilities": [
+      "browser"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Strava",
+     "id": "strava",
+     "capabilities": [
+      "local_services"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "g2": "read",
+     "make": "read",
+     "uber": "read",
+     "shop": "irreversible",
+     "apify": "read",
+     "gmail": "read",
+     "slack": "read",
+     "strava": "read",
+     "notion": "mutate",
+     "todoist": "mutate"
+    }
+   },
+   "capabilities_covered": [
+    "automate_hub",
+    "browser",
+    "ecommerce",
+    "email",
+    "local_services",
+    "messaging",
+    "notes_docs",
+    "tasks",
+    "travel_booking",
+    "vertical"
+   ]
+  },
+  {
+   "tier": "medium",
+   "name": "Product & Engineering Loop",
+   "rating": "strong",
+   "why_short": "Claude runs a whole Product & Engineering operation — AI models & agents, Cloud & infrastructure, Code & repos, Database / warehouse, Build & deploy, Email, Identity & compliance, Chat / messaging, Notes & docs, Observability, Security & trust, Tasks & projects — coordinating across all of it from the centre.",
+   "scale": 11,
+   "n_domains": 5,
+   "domains": [
+    "product_eng",
+    "comms",
+    "data_bi",
+    "research",
+    "ops"
+   ],
+   "scale_note": null,
+   "members": [
+    {
+     "name": "Syntitan",
+     "id": "syntitan",
+     "capabilities": [
+      "ai_tools",
+      "database"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Replit",
+     "id": "replit",
+     "capabilities": [
+      "deploy"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Vercel",
+     "id": "vercel",
+     "capabilities": [
+      "cloud_infra"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Datadog",
+     "id": "datadog",
+     "capabilities": [
+      "observability"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Sourcegraph",
+     "id": "sourcegraph",
+     "capabilities": [
+      "code"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Snyk Security",
+     "id": "snyk_security",
+     "capabilities": [
+      "security"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Clerk",
+     "id": "clerk",
+     "capabilities": [
+      "cloud_infra",
+      "identity"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "syntitan": "mutate",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "replit": "irreversible",
+     "vercel": "irreversible",
+     "notion": "mutate",
+     "datadog": "read",
+     "todoist": "mutate",
+     "sourcegraph": "read",
+     "snyk_security": "read",
+     "clerk": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "ai_tools",
+    "cloud_infra",
+    "code",
+    "database",
+    "deploy",
+    "email",
+    "identity",
+    "messaging",
+    "notes_docs",
+    "observability",
+    "security",
+    "tasks"
+   ]
+  },
+  {
+   "tier": "large",
+   "name": "GTM Engine",
+   "rating": "strong",
+   "why_short": "Claude runs the whole go-to-market motion — lead discovery, CRM, outbound, support and the money — as one system it coordinates end to end. Spans 6 of 12 domains (Comms & Collaboration, Finance & Accounting, Data & BI, Marketing, Sales, Support).",
+   "scale": 20,
+   "n_domains": 6,
+   "domains": [
+    "comms",
+    "finance",
+    "data_bi",
+    "marketing",
+    "sales",
+    "support"
+   ],
+   "scale_note": "22 connectors in · 20 kept as the coherent core · 6/12 domains.",
+   "members": [
+    {
+     "name": "Clay",
+     "id": "clay",
+     "capabilities": [
+      "enrich_company",
+      "discover_companies"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Sequence",
+     "id": "sequence",
+     "capabilities": [
+      "accounting",
+      "invoicing"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "FMP",
+     "id": "fmp",
+     "capabilities": [
+      "market_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Bitly",
+     "id": "bitly",
+     "capabilities": [
+      "social_media"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Stripe",
+     "id": "stripe",
+     "capabilities": [
+      "payments"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "HubSpot",
+     "id": "hubspot",
+     "capabilities": [
+      "crm"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Klaviyo",
+     "id": "klaviyo",
+     "capabilities": [
+      "outreach"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Semrush",
+     "id": "semrush",
+     "capabilities": [
+      "marketing_analytics"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Tableau",
+     "id": "tableau",
+     "capabilities": [
+      "bi_visualize"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Intercom",
+     "id": "intercom",
+     "capabilities": [
+      "support_desk"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Fireflies",
+     "id": "fireflies",
+     "capabilities": [
+      "transcribe_meeting"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Snowflake",
+     "id": "snowflake",
+     "capabilities": [
+      "database"
+     ],
+     "role": "sink",
+     "side_effect": "create"
+    },
+    {
+     "name": "Filesystem",
+     "id": "filesystem",
+     "capabilities": [
+      "desktop"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "TomTom Maps",
+     "id": "tomtom_maps",
+     "capabilities": [
+      "weather_geo"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "SurveyMonkey",
+     "id": "surveymonkey",
+     "capabilities": [
+      "forms"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Google Drive",
+     "id": "google_drive",
+     "capabilities": [
+      "files"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Google Calendar",
+     "id": "google_calendar",
+     "capabilities": [
+      "calendar"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Interactive Brokers (IBKR)",
+     "id": "interactive_brokers_ibkr",
+     "capabilities": [
+      "trading"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [
+    {
+     "name": "ZoomInfo",
+     "status": "fallback",
+     "reason": "redundant: enrich_company, discover_companies already covered — kept only as a fallback."
+    },
+    {
+     "name": "Xero",
+     "status": "fallback",
+     "reason": "redundant: accounting already covered — kept only as a fallback."
+    }
+   ],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "clay": "read",
+     "sequence": "irreversible",
+     "fmp": "read",
+     "bitly": "irreversible",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "stripe": "irreversible",
+     "hubspot": "mutate",
+     "klaviyo": "irreversible",
+     "semrush": "read",
+     "tableau": "read",
+     "intercom": "irreversible",
+     "fireflies": "read",
+     "snowflake": "create",
+     "filesystem": "mutate",
+     "tomtom_maps": "read",
+     "surveymonkey": "read",
+     "google_drive": "mutate",
+     "google_calendar": "mutate",
+     "interactive_brokers_ibkr": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "accounting",
+    "bi_visualize",
+    "calendar",
+    "crm",
+    "database",
+    "desktop",
+    "discover_companies",
+    "email",
+    "enrich_company",
+    "files",
+    "forms",
+    "invoicing",
+    "market_data",
+    "marketing_analytics",
+    "messaging",
+    "outreach",
+    "payments",
+    "social_media",
+    "support_desk",
+    "trading",
+    "transcribe_meeting",
+    "weather_geo"
+   ]
+  },
+  {
+   "tier": "large",
+   "name": "Back-Office Operation",
+   "rating": "strong",
+   "why_short": "Claude runs the back office — books and payments, people and payroll, contracts and the data behind them — from one seat. Spans 7 of 12 domains (Operations & Logistics, Comms & Collaboration, Finance & Accounting, Data & BI, HR & Recruiting, Legal, Research & Knowledge).",
+   "scale": 25,
+   "n_domains": 7,
+   "domains": [
+    "ops",
+    "comms",
+    "finance",
+    "data_bi",
+    "hr",
+    "legal",
+    "research"
+   ],
+   "scale_note": "29 connectors in · 25 kept as the coherent core · 7/12 domains.",
+   "members": [
+    {
+     "name": "Gusto",
+     "id": "gusto",
+     "capabilities": [
+      "ats_hiring",
+      "payroll"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Sequence",
+     "id": "sequence",
+     "capabilities": [
+      "accounting",
+      "invoicing"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "G2",
+     "id": "g2",
+     "capabilities": [
+      "vertical"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "FMP",
+     "id": "fmp",
+     "capabilities": [
+      "market_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Make",
+     "id": "make",
+     "capabilities": [
+      "automate_hub"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Uber",
+     "id": "uber",
+     "capabilities": [
+      "travel_booking"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Shop",
+     "id": "shop",
+     "capabilities": [
+      "ecommerce"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Apify",
+     "id": "apify",
+     "capabilities": [
+      "browser"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Asana",
+     "id": "asana",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Stripe",
+     "id": "stripe",
+     "capabilities": [
+      "payments"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Indeed",
+     "id": "indeed",
+     "capabilities": [
+      "job_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Harvey",
+     "id": "harvey",
+     "capabilities": [
+      "legal_research"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Strava",
+     "id": "strava",
+     "capabilities": [
+      "local_services"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Tableau",
+     "id": "tableau",
+     "capabilities": [
+      "bi_visualize"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Docusign",
+     "id": "docusign",
+     "capabilities": [
+      "esign"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Fireflies",
+     "id": "fireflies",
+     "capabilities": [
+      "transcribe_meeting"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Snowflake",
+     "id": "snowflake",
+     "capabilities": [
+      "database"
+     ],
+     "role": "sink",
+     "side_effect": "create"
+    },
+    {
+     "name": "Filesystem",
+     "id": "filesystem",
+     "capabilities": [
+      "desktop"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "TomTom Maps",
+     "id": "tomtom_maps",
+     "capabilities": [
+      "weather_geo"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Google Drive",
+     "id": "google_drive",
+     "capabilities": [
+      "files"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Google Calendar",
+     "id": "google_calendar",
+     "capabilities": [
+      "calendar"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Interactive Brokers (IBKR)",
+     "id": "interactive_brokers_ibkr",
+     "capabilities": [
+      "trading"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [
+    {
+     "name": "Xero",
+     "status": "fallback",
+     "reason": "redundant: accounting already covered — kept only as a fallback."
+    },
+    {
+     "name": "Ashby",
+     "status": "fallback",
+     "reason": "redundant: ats_hiring already covered — kept only as a fallback."
+    },
+    {
+     "name": "Resend",
+     "status": "fallback",
+     "reason": "redundant: email already covered — kept only as a fallback."
+    },
+    {
+     "name": "Todoist",
+     "status": "fallback",
+     "reason": "redundant: tasks already covered — kept only as a fallback."
+    }
+   ],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "gusto": "irreversible",
+     "sequence": "irreversible",
+     "g2": "read",
+     "fmp": "read",
+     "make": "irreversible",
+     "uber": "irreversible",
+     "shop": "irreversible",
+     "apify": "irreversible",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "asana": "mutate",
+     "stripe": "irreversible",
+     "indeed": "read",
+     "harvey": "read",
+     "strava": "irreversible",
+     "notion": "mutate",
+     "tableau": "read",
+     "docusign": "irreversible",
+     "fireflies": "read",
+     "snowflake": "create",
+     "filesystem": "mutate",
+     "tomtom_maps": "read",
+     "google_drive": "mutate",
+     "google_calendar": "mutate",
+     "interactive_brokers_ibkr": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "accounting",
+    "ats_hiring",
+    "automate_hub",
+    "bi_visualize",
+    "browser",
+    "calendar",
+    "database",
+    "desktop",
+    "ecommerce",
+    "email",
+    "esign",
+    "files",
+    "invoicing",
+    "job_search",
+    "legal_research",
+    "local_services",
+    "market_data",
+    "messaging",
+    "notes_docs",
+    "payments",
+    "payroll",
+    "tasks",
+    "trading",
+    "transcribe_meeting",
+    "travel_booking",
+    "vertical",
+    "weather_geo"
+   ]
+  },
+  {
+   "tier": "large",
+   "name": "Runs like a company",
+   "rating": "strong",
+   "why_short": "The functional surface of a whole operation: Claude + a connector for every capability, across all twelve domains, with Claude orchestrating between every part. Spans 12 of 12 domains (Product & Engineering, Operations & Logistics, Comms & Collaboration, Research & Knowledge, Finance & Accounting, Data & BI, Design & Creative, Marketing, HR & Recruiting, Sales, Legal, Support).",
+   "scale": 47,
+   "n_domains": 12,
+   "domains": [
+    "product_eng",
+    "ops",
+    "comms",
+    "research",
+    "finance",
+    "data_bi",
+    "design",
+    "marketing",
+    "hr",
+    "sales",
+    "legal",
+    "support"
+   ],
+   "scale_note": "51 connectors in · 47 kept as the coherent core · 12/12 domains.",
+   "members": [
+    {
+     "name": "Clay",
+     "id": "clay",
+     "capabilities": [
+      "enrich_company",
+      "discover_companies"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Gusto",
+     "id": "gusto",
+     "capabilities": [
+      "ats_hiring",
+      "payroll"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Sequence",
+     "id": "sequence",
+     "capabilities": [
+      "accounting",
+      "invoicing"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Syntitan",
+     "id": "syntitan",
+     "capabilities": [
+      "ai_tools",
+      "database"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "G2",
+     "id": "g2",
+     "capabilities": [
+      "vertical"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "FMP",
+     "id": "fmp",
+     "capabilities": [
+      "market_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Exa",
+     "id": "exa",
+     "capabilities": [
+      "web_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Make",
+     "id": "make",
+     "capabilities": [
+      "automate_hub"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Uber",
+     "id": "uber",
+     "capabilities": [
+      "travel_booking"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Shop",
+     "id": "shop",
+     "capabilities": [
+      "ecommerce"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Mem0",
+     "id": "mem0",
+     "capabilities": [
+      "knowledge_base"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Gmail",
+     "id": "gmail",
+     "capabilities": [
+      "email"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Slack",
+     "id": "slack",
+     "capabilities": [
+      "messaging"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Apify",
+     "id": "apify",
+     "capabilities": [
+      "browser"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Bitly",
+     "id": "bitly",
+     "capabilities": [
+      "social_media"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Canva",
+     "id": "canva",
+     "capabilities": [
+      "design"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Figma",
+     "id": "figma",
+     "capabilities": [
+      "diagramming"
+     ],
+     "role": "sink",
+     "side_effect": "create"
+    },
+    {
+     "name": "Gamma",
+     "id": "gamma",
+     "capabilities": [
+      "presentations"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Strava",
+     "id": "strava",
+     "capabilities": [
+      "local_services"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Stripe",
+     "id": "stripe",
+     "capabilities": [
+      "payments"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Replit",
+     "id": "replit",
+     "capabilities": [
+      "deploy"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Vercel",
+     "id": "vercel",
+     "capabilities": [
+      "cloud_infra"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Indeed",
+     "id": "indeed",
+     "capabilities": [
+      "job_search"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Harvey",
+     "id": "harvey",
+     "capabilities": [
+      "legal_research"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "PubMed",
+     "id": "pubmed",
+     "capabilities": [
+      "research_science"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Notion",
+     "id": "notion",
+     "capabilities": [
+      "notes_docs"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Todoist",
+     "id": "todoist",
+     "capabilities": [
+      "tasks"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "HubSpot",
+     "id": "hubspot",
+     "capabilities": [
+      "crm"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Klaviyo",
+     "id": "klaviyo",
+     "capabilities": [
+      "outreach"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Semrush",
+     "id": "semrush",
+     "capabilities": [
+      "marketing_analytics"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Datadog",
+     "id": "datadog",
+     "capabilities": [
+      "observability"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Tableau",
+     "id": "tableau",
+     "capabilities": [
+      "bi_visualize"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Intercom",
+     "id": "intercom",
+     "capabilities": [
+      "support_desk"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Docusign",
+     "id": "docusign",
+     "capabilities": [
+      "esign"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "O'Reilly",
+     "id": "o_reilly",
+     "capabilities": [
+      "education"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "Fireflies",
+     "id": "fireflies",
+     "capabilities": [
+      "transcribe_meeting"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Filesystem",
+     "id": "filesystem",
+     "capabilities": [
+      "desktop"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "ElevenLabs",
+     "id": "elevenlabs",
+     "capabilities": [
+      "media_gen"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Sourcegraph",
+     "id": "sourcegraph",
+     "capabilities": [
+      "code"
+     ],
+     "role": "sink",
+     "side_effect": "read"
+    },
+    {
+     "name": "TomTom Maps",
+     "id": "tomtom_maps",
+     "capabilities": [
+      "weather_geo"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Google Drive",
+     "id": "google_drive",
+     "capabilities": [
+      "files"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "SurveyMonkey",
+     "id": "surveymonkey",
+     "capabilities": [
+      "forms"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Snyk Security",
+     "id": "snyk_security",
+     "capabilities": [
+      "security"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Google Calendar",
+     "id": "google_calendar",
+     "capabilities": [
+      "calendar"
+     ],
+     "role": "sink",
+     "side_effect": "mutate"
+    },
+    {
+     "name": "Anthropic Economic Index",
+     "id": "anthropic_economic_index",
+     "capabilities": [
+      "public_data"
+     ],
+     "role": "source",
+     "side_effect": "read"
+    },
+    {
+     "name": "Interactive Brokers (IBKR)",
+     "id": "interactive_brokers_ibkr",
+     "capabilities": [
+      "trading"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    },
+    {
+     "name": "Clerk",
+     "id": "clerk",
+     "capabilities": [
+      "cloud_infra",
+      "identity"
+     ],
+     "role": "sink",
+     "side_effect": "irreversible"
+    }
+   ],
+   "dropped": [
+    {
+     "name": "ZoomInfo",
+     "status": "fallback",
+     "reason": "redundant: enrich_company, discover_companies already covered — kept only as a fallback."
+    },
+    {
+     "name": "Xero",
+     "status": "fallback",
+     "reason": "redundant: accounting already covered — kept only as a fallback."
+    },
+    {
+     "name": "Ashby",
+     "status": "fallback",
+     "reason": "redundant: ats_hiring already covered — kept only as a fallback."
+    },
+    {
+     "name": "Snowflake",
+     "status": "fallback",
+     "reason": "redundant: database already covered — kept only as a fallback."
+    }
+   ],
+   "side_effects": {
+    "headline": "irreversible",
+    "observe": "read",
+    "per_connector": {
+     "clay": "read",
+     "gusto": "irreversible",
+     "sequence": "irreversible",
+     "syntitan": "mutate",
+     "g2": "read",
+     "fmp": "read",
+     "exa": "read",
+     "make": "irreversible",
+     "uber": "irreversible",
+     "shop": "irreversible",
+     "mem0": "mutate",
+     "gmail": "irreversible",
+     "slack": "irreversible",
+     "apify": "irreversible",
+     "bitly": "irreversible",
+     "canva": "mutate",
+     "figma": "create",
+     "gamma": "mutate",
+     "strava": "irreversible",
+     "stripe": "irreversible",
+     "replit": "irreversible",
+     "vercel": "irreversible",
+     "indeed": "read",
+     "harvey": "read",
+     "pubmed": "read",
+     "notion": "mutate",
+     "todoist": "mutate",
+     "hubspot": "mutate",
+     "klaviyo": "irreversible",
+     "semrush": "read",
+     "datadog": "read",
+     "tableau": "read",
+     "intercom": "irreversible",
+     "docusign": "irreversible",
+     "o_reilly": "read",
+     "fireflies": "read",
+     "filesystem": "mutate",
+     "elevenlabs": "mutate",
+     "sourcegraph": "read",
+     "tomtom_maps": "read",
+     "google_drive": "mutate",
+     "surveymonkey": "read",
+     "snyk_security": "read",
+     "google_calendar": "mutate",
+     "anthropic_economic_index": "read",
+     "interactive_brokers_ibkr": "irreversible",
+     "clerk": "irreversible"
+    }
+   },
+   "capabilities_covered": [
+    "accounting",
+    "ai_tools",
+    "ats_hiring",
+    "automate_hub",
+    "bi_visualize",
+    "browser",
+    "calendar",
+    "cloud_infra",
+    "code",
+    "crm",
+    "database",
+    "deploy",
+    "design",
+    "desktop",
+    "diagramming",
+    "discover_companies",
+    "ecommerce",
+    "education",
+    "email",
+    "enrich_company",
+    "esign",
+    "files",
+    "forms",
+    "identity",
+    "invoicing",
+    "job_search",
+    "knowledge_base",
+    "legal_research",
+    "local_services",
+    "market_data",
+    "marketing_analytics",
+    "media_gen",
+    "messaging",
+    "notes_docs",
+    "observability",
+    "outreach",
+    "payments",
+    "payroll",
+    "presentations",
+    "public_data",
+    "research_science",
+    "security",
+    "social_media",
+    "support_desk",
+    "tasks",
+    "trading",
+    "transcribe_meeting",
+    "travel_booking",
+    "vertical",
+    "weather_geo",
+    "web_search"
+   ]
+  }
+ ]
+}
