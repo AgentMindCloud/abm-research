@@ -1,0 +1,57 @@
+{
+  "_schema": {
+    "purpose": "Concrete situations to run through the engine. The point is not that the engine invents workflows, but that when a real need is expressed the engine proposes a composition whose join keys, mode and side-effect profile survive inspection.",
+    "fields": {
+      "id": "stable identifier",
+      "need": "the situation in one sentence, as a person would say it",
+      "chain": "the connectors the composition must touch, in intended order",
+      "expected_pattern": "one of the nine patterns in composition.md",
+      "forbid": "side-effect levels that must not appear anywhere in the chain, or []",
+      "expect_mode": "the strongest mode the engine should find for the weakest hop: direct | inferred | any"
+    },
+    "origin": "20 generic, 20 drawn from Jani's context (ABM research, the HCMC AI reseller funnel, women-heavy market research)"
+  },
+  "scenarios": [
+    {"id": "gen01", "need": "Turn the attachments people email me into filed documents I can search later.", "chain": ["Gmail", "Google Drive"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen02", "need": "Take the leads I pulled from a prospecting database and start an outbound sequence.", "chain": ["Apollo.io", "Lemlist"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen03", "need": "Enrich the companies in my CRM with firmographic data.", "chain": ["ZoomInfo", "HubSpot"], "expected_pattern": "enrich", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen04", "need": "Reconcile my storefront orders against my accounting ledger.", "chain": ["Shopify", "Xero"], "expected_pattern": "reconcile", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen05", "need": "Get payment records into the books without retyping them.", "chain": ["Stripe", "Xero"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen06", "need": "Turn survey responses into a queryable table.", "chain": ["SurveyMonkey", "Supabase"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen07", "need": "Put my warehouse data in front of the team as a dashboard.", "chain": ["Supabase", "Tableau"], "expected_pattern": "materialize", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen08", "need": "Check whether any of my CRM contacts turned up in a breach.", "chain": ["Have I Been Pwned", "HubSpot"], "expected_pattern": "enrich", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen09", "need": "Turn what was said in my meetings into tasks I will actually do.", "chain": ["Fireflies", "Todoist"], "expected_pattern": "pipeline", "forbid": ["irreversible"], "expect_mode": "inferred"},
+    {"id": "gen10", "need": "Make the emails that need action show up on my task list.", "chain": ["Gmail", "Todoist"], "expected_pattern": "pipeline", "forbid": ["irreversible"], "expect_mode": "inferred"},
+    {"id": "gen11", "need": "Publish an analysis as a shareable page instead of losing it in chat.", "chain": ["Supabase", "Send"], "expected_pattern": "materialize", "forbid": [], "expect_mode": "any"},
+    {"id": "gen12", "need": "Take a signed contract and file it where the team can find it.", "chain": ["DocuSign", "Box"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "gen13", "need": "Get my ad and site metrics into one place I can query.", "chain": ["Semrush", "Google Cloud BigQuery"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "any"},
+    {"id": "gen14", "need": "Turn a research question into sourced reading I can cite.", "chain": ["Exa", "Basic Memory Cloud"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "any"},
+    {"id": "gen15", "need": "Track shipments against the orders that produced them.", "chain": ["Shopify", "Shippo"], "expected_pattern": "reconcile", "forbid": [], "expect_mode": "any"},
+    {"id": "gen16", "need": "Turn customer support volume into something I can chart over time.", "chain": ["Intercom", "Metabase"], "expected_pattern": "digest", "forbid": [], "expect_mode": "any"},
+    {"id": "gen17", "need": "Build a deck from numbers rather than rebuilding it by hand each month.", "chain": ["Metabase", "Gamma"], "expected_pattern": "materialize", "forbid": [], "expect_mode": "any"},
+    {"id": "gen18", "need": "Watch for errors in production and page a human when it matters.", "chain": ["Sentry", "PagerDuty"], "expected_pattern": "trigger_action", "forbid": [], "expect_mode": "any"},
+    {"id": "gen19", "need": "Turn candidate applications into a reviewable pipeline.", "chain": ["Teamtailor", "Airtable"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "any"},
+    {"id": "gen20", "need": "Keep a durable record linking records across two systems so re-runs do not duplicate.", "chain": ["Supabase", "Airtable"], "expected_pattern": "mirror", "forbid": [], "expect_mode": "direct"},
+
+    {"id": "abm01", "need": "Find mid-market Western companies that look like they need AI help, and get them into a CRM.", "chain": ["Harmonic", "Attio"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm02", "need": "Enrich those companies with headcount and hiring signals before I decide who to contact.", "chain": ["Harmonic", "Aura"], "expected_pattern": "enrich", "forbid": ["irreversible"], "expect_mode": "direct"},
+    {"id": "abm03", "need": "Find the actual decision-maker's email at a company I have only a domain for.", "chain": ["Apollo.io", "ZoomInfo"], "expected_pattern": "enrich", "forbid": ["irreversible"], "expect_mode": "direct"},
+    {"id": "abm04", "need": "Run cold outreach to a qualified list without sending anything I have not seen.", "chain": ["Attio", "Lemlist"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm05", "need": "Track which outreach threads got a reply so I can follow up on the live ones.", "chain": ["Lemlist", "Attio"], "expected_pattern": "reconcile", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm06", "need": "Turn a discovery call into a written brief the HCMC provider can quote against.", "chain": ["Fireflies", "Google Drive"], "expected_pattern": "materialize", "forbid": [], "expect_mode": "any"},
+    {"id": "abm07", "need": "Give a prospect a credible landing page for the offer without building a site.", "chain": ["Gamma", "Send"], "expected_pattern": "materialize", "forbid": [], "expect_mode": "any"},
+    {"id": "abm08", "need": "Let a prospect book a call at a time that works, without me chasing.", "chain": ["Calendly", "Google Calendar"], "expected_pattern": "trigger_action", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm09", "need": "Invoice a Western client from Vietnam and have it land in the books.", "chain": ["Stripe", "Xero"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm10", "need": "Send the onboarding paperwork for signature and keep the executed copy.", "chain": ["DocuSign", "Google Drive"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm11", "need": "Keep every prospect interaction in one durable store instead of my memory.", "chain": ["Gmail", "Supabase"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "any"},
+    {"id": "abm12", "need": "Check a target market's economic conditions before I pitch into it.", "chain": ["Oxford Economics", "Metabase"], "expected_pattern": "enrich", "forbid": [], "expect_mode": "any"},
+    {"id": "abm13", "need": "Compare how Claude is actually used in a country against where I am selling.", "chain": ["Anthropic Economic Index", "Metabase"], "expected_pattern": "reconcile", "forbid": [], "expect_mode": "any"},
+    {"id": "abm14", "need": "Turn my research notes into a paper I can hand a client.", "chain": ["Basic Memory Cloud", "Gamma"], "expected_pattern": "materialize", "forbid": [], "expect_mode": "any"},
+    {"id": "abm15", "need": "Find which industries employ mostly women in a given country, from public data.", "chain": ["Anthropic Economic Index", "Supabase"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "any"},
+    {"id": "abm16", "need": "Pull public health and demographic series for a region I am researching.", "chain": ["PopHIVE", "Supabase"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm17", "need": "Find software categories women-heavy businesses actually review and rate.", "chain": ["G2", "Airtable"], "expected_pattern": "pipeline", "forbid": [], "expect_mode": "any"},
+    {"id": "abm18", "need": "Check whether a market I am researching has real procurement money in it.", "chain": ["JP Bid", "Metabase"], "expected_pattern": "enrich", "forbid": [], "expect_mode": "any"},
+    {"id": "abm19", "need": "Keep the whole research corpus searchable without re-reading everything.", "chain": ["Google Drive", "Glean"], "expected_pattern": "enrich", "forbid": [], "expect_mode": "direct"},
+    {"id": "abm20", "need": "Produce a weekly brief from calendar, inbox and the task list.", "chain": ["Google Calendar", "Gmail", "Todoist"], "expected_pattern": "digest", "forbid": ["irreversible"], "expect_mode": "any"}
+  ]
+}
