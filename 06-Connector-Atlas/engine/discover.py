@@ -153,18 +153,35 @@ class Discover:
                         "backoffice", "Back-Office Operation",
                         "Claude runs the back office — books and payments, people and payroll, "
                         "contracts and the data behind them — from one seat."),
+            # the showpiece: the best connector for every capability across all 12 domains —
+            # genuinely huge and clean, Claude orchestrating between every part.
             self._cover(allcaps, "company", "Runs like a company",
                         "The functional surface of a whole operation: Claude + a connector for every "
-                        "capability, across all twelve domains, with Claude orchestrating between every part."),
+                        "capability across all twelve domains, with Claude orchestrating between every part.",
+                        per_cap=1, featured=True),
         ]
         return [r for r in out if r["rating"] in ("strong", "partial")]
 
-    def _cover(self, caps, label, name, why):
+    def _cap_picks(self, cap, taken, n):
+        """Up to n distinct connectors for a capability, preferred representative first."""
+        seq, out = [], []
+        pref = PREFERRED.get(cap)
+        if pref in self.a.by_id and cap in self.a.by_id[pref]["capabilities"]:
+            seq.append(self.a.by_id[pref])
+        seen = {c["id"] for c in seq}
+        seq += [c for c in self.best.get(cap, []) if c["id"] not in seen]
+        for c in seq:
+            if c["id"] not in taken:
+                taken.add(c["id"])
+                out.append(c)
+                if len(out) >= n:
+                    break
+        return out
+
+    def _cover(self, caps, label, name, why, per_cap=1, featured=False):
         taken, names = set(), []
         for cap in caps:
-            c = self.pick(cap, taken)
-            if c and c["id"] not in taken:
-                taken.add(c["id"])
+            for c in self._cap_picks(cap, taken, per_cap):
                 names.append(c["name"])
         r = self.a.evaluate(names)
         n = r["n_domains"]
@@ -172,6 +189,7 @@ class Discover:
         r["name"] = name
         r["why_short"] = f"{why} Spans {n} of 12 domains ({dl})."
         r["scale_note"] = f"{len(names)} connectors in · {r['scale']} kept as the coherent core · {n}/12 domains."
+        r["featured"] = featured
         return r
 
     def _name_domain(self, r, d):
@@ -184,10 +202,10 @@ class Discover:
 
     def run(self):
         cat = {"small": self.small(), "medium": self.medium(), "large": self.large()}
-        # order each tier by scale, then de-dup names across tiers
+        # order each tier by potential (strongest first) so every section leads with its best
         flat = []
         for tier in ("small", "medium", "large"):
-            for r in sorted(cat[tier], key=lambda x: x["scale"]):
+            for r in sorted(cat[tier], key=lambda x: -x["potential"]["total"]):
                 r["tier"] = tier
                 flat.append(r)
         return flat
@@ -201,8 +219,10 @@ def to_catalogue(usecases):
             "tier": r["tier"], "name": r["name"], "rating": r["rating"],
             "why_short": r["why_short"], "scale": r["scale"], "n_domains": r["n_domains"],
             "domains": r["domains"], "scale_note": r.get("scale_note"),
+            "potential": r["potential"], "featured": r.get("featured", False),
             "members": [{"name": m["name"], "id": m["id"], "capabilities": m["capabilities"],
-                         "role": m["role"], "side_effect": m["side_effect"]} for m in r["members"]],
+                         "role": m["role"], "side_effect": m["side_effect"],
+                         "function": m.get("function", "")} for m in r["members"]],
             "dropped": [{"name": d["name"], "status": d["status"], "reason": d["reason"]}
                         for d in r["dropped"]],
             "side_effects": r["side_effects"], "capabilities_covered": r["capabilities_covered"],
@@ -227,9 +247,15 @@ def write_report(cat, path):
             lines += ["", tier_titles[r["tier"]], ""]
             last_tier = r["tier"]
         badge = {"strong": "●", "partial": "◐"}[r["rating"]]
-        lines.append(f"### {badge} {r['name']}  ·  {r['scale']} connectors · {r['n_domains']}/12 domains · {r['rating']}")
+        star = "★ " if r.get("featured") else ""
+        p = r["potential"]
+        lines.append(f"### {star}{badge} {r['name']}  ·  potential {p['total']}/100 · "
+                     f"{r['scale']} connectors · {r['n_domains']}/12 domains · {r['rating']}")
         lines.append("")
         lines.append(f"*{r['why_short']}*")
+        lines.append("")
+        lines.append(f"> potential {p['total']}/100 — applicability {p['applicability']} · "
+                     f"leverage {p['leverage']} · reach {p['reach']} · tightness {p['tightness']}")
         lines.append("")
         if r.get("scale_note"):
             lines.append(f"> scale: {r['scale_note']}")
@@ -278,8 +304,10 @@ def main():
         by_tier[r["tier"]] += 1
     print(f"discovered {n} working use cases: "
           f"{by_tier.get('small',0)} small, {by_tier.get('medium',0)} medium, {by_tier.get('large',0)} large")
-    for r in cat:
-        print(f"  [{r['rating']:7s}] {r['scale']:3d} conn · {r['n_domains']:2d}/12 dom · {r['name']}")
+    for r in sorted(cat, key=lambda x: -x["potential"]["total"]):
+        star = "★" if r.get("featured") else " "
+        print(f"  {star}[{r['rating']:7s}] potential {r['potential']['total']:3d} · "
+              f"{r['scale']:3d} conn · {r['n_domains']:2d}/12 dom · {r['name']}")
 
     if args.write_report:
         os.makedirs(REPORTS, exist_ok=True)

@@ -266,7 +266,8 @@ class Atlas:
                           why_short="A combo needs at least two connectors for Claude to bridge.",
                           members=[], core=[], dropped=[], domains=[], n_domains=0, scale=len(conns),
                           why_long=[], side_effects={"headline": "read", "observe": "read", "per_connector": {}},
-                          capabilities_covered=[])
+                          capabilities_covered=[],
+                          potential={"total": 0, "applicability": 0, "leverage": 0, "reach": 0, "tightness": 0})
             return result
 
         # 1. components -> keep the largest coherent one; the rest are unrelated
@@ -344,7 +345,8 @@ class Atlas:
             caplabels = ", ".join(self.CAP[cap]["label"] for cap in c["capabilities"])
             why_long.append(f"{c['name']} — {caplabels} ({m['role']}): {c['function']['text']}")
             member_out.append({"id": c["id"], "name": c["name"], "capabilities": c["capabilities"],
-                               "status": "core", "role": m["role"], "side_effect": per_conn[c["id"]]})
+                               "status": "core", "role": m["role"], "side_effect": per_conn[c["id"]],
+                               "function": c["function"]["text"]})
         dropped = []
         for c in redundant:
             dup = [cap for cap in c["capabilities"] if cap in covered]
@@ -357,13 +359,45 @@ class Atlas:
                             "reason": "no capability links into this use case's workflow."})
 
         closing = self._closing(members, rating)
+        pot = self._potential(members, dropped, rating, headline, len(core_domains), len(core))
         result.update(
             rating=rating, name=name, why_short=why_short, why_long=why_long + [closing],
             members=member_out, core=[c["id"] for c in core], dropped=dropped,
             domains=core_domains, n_domains=len(core_domains), scale=len(core),
             side_effects={"headline": headline, "observe": observe, "per_connector": per_conn},
-            capabilities_covered=core_caps)
+            capabilities_covered=core_caps, potential=pot)
         return result
+
+    # --- potential: how much value this use case represents, independent of size ----------
+    # A composite of four inspectable 0-25 parts, so a sharp 2-connector combo and a huge system
+    # can each rank near the top for different, visible reasons. Never a bare number.
+    def _commonness(self, cap):
+        m = self.CAP[cap]
+        if m.get("glue"):
+            return 1.0            # email, tasks, notes, search… anyone runs these
+        if m.get("island"):
+            return 0.2            # a markets feed, a brokerage, case-law — niche
+        if m.get("specialist"):
+            return 0.45           # an operational specialist (monitoring, a store, recruiting)
+        return 0.7                # ordinary domain work (crm, accounting, code…)
+
+    def _potential(self, members, dropped, rating, headline, n_domains, scale):
+        if rating == "non" or not members:
+            return {"total": 0, "applicability": 0, "leverage": 0, "reach": 0, "tightness": 0}
+        # applicability — how universally runnable the connectors are
+        app = 25.0 * (sum(max(self._commonness(c) for c in m["conn"]["capabilities"])
+                          for m in members) / len(members))
+        # leverage — does Claude actually act, and how far
+        lev = min(25.0, {"read": 8, "create": 15, "mutate": 18, "irreversible": 22}.get(headline, 8)
+                  + (3 if any(m["role"] == "sink" for m in members) else 0))
+        # reach — operational span; blended so size is only a quarter of the score
+        reach = 25.0 * (0.6 * (n_domains / 12) + 0.4 * (min(scale, 40) / 40))
+        # tightness — coherence quality and cleanliness (no dead members)
+        rf = {"strong": 1.0, "partial": 0.6}.get(rating, 0.0)
+        clean = len(members) / (len(members) + len(dropped)) if members else 0.0
+        tight = 25.0 * rf * clean
+        return {"total": round(app + lev + reach + tight), "applicability": round(app),
+                "leverage": round(lev), "reach": round(reach), "tightness": round(tight)}
 
     def _closing(self, members, rating):
         if rating == "non":
@@ -402,6 +436,10 @@ def print_report(r):
     se = r["side_effects"]
     print(f"\n  side effects (verbs actually used): {se['headline'].upper()}   "
           f"| read-only footprint: {se['observe']}")
+    if r["rating"] != "non":
+        p = r["potential"]
+        print(f"  potential: {p['total']}/100  (applicability {p['applicability']} · "
+              f"leverage {p['leverage']} · reach {p['reach']} · tightness {p['tightness']})")
     print()
 
 

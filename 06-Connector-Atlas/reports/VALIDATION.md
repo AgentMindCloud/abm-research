@@ -1,6 +1,6 @@
 # Connector Atlas — validation
 
-**19/19 checks pass.** Evidence that the use-case discovery is sound — coherence, membership, coverage and per-verb side effects. No held-out precision on join keys (that is not what this atlas measures); the honest test of a judgment model is whether its calls match hand labels and its reasoning is inspectable.
+**23/23 checks pass.** Evidence that the use-case discovery is sound — coherence, membership, coverage, per-verb side effects and the potential score. No held-out precision on join keys (that is not what this atlas measures); the honest test of a judgment model is whether its calls match hand labels and its reasoning is inspectable.
 
 
 ## 1. Coherence spot-checks
@@ -52,3 +52,14 @@
   observe headline=read, Gmail(send-capable) used as source=read
 - ✅ **a use case that actually sends incurs irreversible**  
   HubSpot+Klaviyo headline=irreversible, read-only footprint=read
+
+## 5. Potential score sanity
+
+- ✅ **every use case's potential is its four parts summed**  
+  mismatched: none
+- ✅ **the huge featured system tops operational reach**  
+  featured reach=25, max across catalogue=25
+- ✅ **a small universal combo maxes applicability (size-independent value)**  
+  Gmail+Todoist applicability=25 (max 25), featured applicability=17
+- ✅ **a non-use-case scores zero potential**  
+  total=0

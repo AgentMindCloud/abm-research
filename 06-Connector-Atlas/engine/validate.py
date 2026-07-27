@@ -118,6 +118,29 @@ def run():
          f"HubSpot+Klaviyo headline={sends['side_effects']['headline']}, "
          f"read-only footprint={sends['side_effects']['observe']}")
 
+    # -- 5. potential score sanity ------------------------------------------
+    bad = [u["name"] for u in cat
+           if abs(u["potential"]["total"] - sum(u["potential"][k]
+                  for k in ("applicability", "leverage", "reach", "tightness"))) > 2]
+    c.ok("potential", "every use case's potential is its four parts summed",
+         not bad, f"mismatched: {bad or 'none'}")
+
+    featured = next((u for u in cat if u.get("featured")), None)
+    max_reach = max(u["potential"]["reach"] for u in cat)
+    c.ok("potential", "the huge featured system tops operational reach",
+         featured is not None and featured["potential"]["reach"] == max_reach,
+         f"featured reach={featured['potential']['reach'] if featured else '?'}, "
+         f"max across catalogue={max_reach}")
+
+    gt = a.evaluate(["Gmail", "Todoist"])["potential"]
+    c.ok("potential", "a small universal combo maxes applicability (size-independent value)",
+         gt["applicability"] == 25 and (featured is None or gt["applicability"] >= featured["potential"]["applicability"]),
+         f"Gmail+Todoist applicability={gt['applicability']} (max 25), "
+         f"featured applicability={featured['potential']['applicability'] if featured else '?'}")
+
+    none = a.evaluate(["Gmail", "Interactive Brokers"])["potential"]["total"]
+    c.ok("potential", "a non-use-case scores zero potential", none == 0, f"total={none}")
+
     return c
 
 
@@ -127,9 +150,9 @@ def write_report(c, path):
     lines = ["# Connector Atlas — validation",
              "",
              f"**{npass}/{total} checks pass.** Evidence that the use-case discovery is sound — "
-             "coherence, membership, coverage and per-verb side effects. No held-out precision on "
-             "join keys (that is not what this atlas measures); the honest test of a judgment model "
-             "is whether its calls match hand labels and its reasoning is inspectable.",
+             "coherence, membership, coverage, per-verb side effects and the potential score. No "
+             "held-out precision on join keys (that is not what this atlas measures); the honest test "
+             "of a judgment model is whether its calls match hand labels and its reasoning is inspectable.",
              ""]
     cats = {}
     for cat, name, passed, detail in c.rows:
@@ -137,8 +160,9 @@ def write_report(c, path):
     titles = {"coherence": "## 1. Coherence spot-checks",
               "membership": "## 2. Membership checks",
               "coverage": "## 3. Coverage sanity",
-              "side_effects": "## 4. Per-verb side effects"}
-    for cat in ("coherence", "membership", "coverage", "side_effects"):
+              "side_effects": "## 4. Per-verb side effects",
+              "potential": "## 5. Potential score sanity"}
+    for cat in ("coherence", "membership", "coverage", "side_effects", "potential"):
         lines += ["", titles[cat], ""]
         for name, passed, detail in cats.get(cat, []):
             mark = "✅" if passed else "❌"

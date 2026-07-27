@@ -28,7 +28,7 @@ data/registry_inferred.json     820 connectors: a function statement, capability
         │   data/domains.json        the 12 domains + how they connect
         ▼
 engine/usecase.py   does Claude + {connectors} make a use case? name it, explain why,
-        │           keep vs. drop members, side effects from verbs actually used
+        │           keep vs. drop members, side effects from verbs used, a potential score
         ▼
 engine/discover.py  a catalogue of working use cases, small → huge
         │           → reports/USE-CASES.md, data/usecases.json
@@ -88,18 +88,35 @@ Capability-guided, never brute-force 820²:
   company** (best connector per capability across all 12 domains). Scale and domain coverage are
   reported honestly — functional reach, never autonomy.
 
+Every use case carries a **potential** score (0–100) so they can be ranked by value *independent of
+size* — a sharp two-connector desk and a whole-company system can each rank near the top for
+different, visible reasons. It is a composite of four inspectable 0–25 parts, never a bare number:
+**applicability** (how universally runnable the connectors are), **leverage** (does Claude actually
+act, not just advise), **reach** (operational span — the only size-weighted part, deliberately a
+quarter of the total), and **tightness** (coherence quality with no dead members).
+
 ```
 python3 engine/discover.py --write-report      # → reports/USE-CASES.md + data/usecases.json
-python3 engine/render.py   --out atlas.html    # → the gallery, Claude in the centre
+python3 engine/render.py   --out atlas.html    # → the static gallery, Claude in the centre
 ```
+
+## The atlas (`atlas.html`)
+
+A **static, readable** page (no interactivity — a page you scan and evaluate). Claude is the hub;
+it opens with a **"most potential" leaderboard across all sizes**, then features the one **huge**
+system that runs like a company (with a domain-by-domain list of which connector fills each
+capability), then lists the full catalogue grouped small → medium → large. Every use case plainly
+states what it is for and which connectors it uses, with the one-line job each connector does and its
+per-use-case side effect. Cinnabar/jade palette; a load-time scaffolding self-check (`CSS1Compat`).
 
 ## Validation (`engine/validate.py`)
 
 Not held-out precision on join keys (gone). Instead: coherence spot-checks against hand labels
 (Gmail+Todoist = yes; Gmail+Interactive Brokers = no), membership checks (a redundant add never
 raises the rating; a complementary one extends it), coverage sanity (a "runs like a company" system
-really spans most domains; a small one is tight), and per-verb side effects. `19/19` pass — see
-`reports/VALIDATION.md`.
+really spans most domains; a small one is tight), per-verb side effects, and potential-score sanity
+(the huge system tops reach; a small universal combo maxes applicability; a non-use-case scores zero).
+`23/23` pass — see `reports/VALIDATION.md`.
 
 ## Files
 
@@ -114,9 +131,9 @@ really spans most domains; a small one is tight), and per-verb side effects. `19
 | `engine/infer.py` | function + capability + per-verb side-effect inference |
 | `engine/usecase.py` | the coherence engine — does a combo make a use case, and why |
 | `engine/discover.py` | multi-scale discovery |
-| `engine/render.py` | `atlas.html` — Claude hub + gallery |
-| `engine/validate.py` | the checks |
-| `atlas.html` | the atlas: Claude in the centre, a gallery of use cases small → huge |
+| `engine/render.py` | `atlas.html` — static readable page: potential leaderboard + huge system + catalogue |
+| `engine/validate.py` | the checks (coherence, membership, coverage, side effects, potential) |
+| `atlas.html` | the atlas: Claude in the centre, use cases ranked by potential, small → huge |
 | `reports/USE-CASES.md`, `reports/VALIDATION.md` | the catalogue and the checks |
 
 *The v1 **function knowledge** (verbs, side effects, vendor rules, archetype priors) is kept and
