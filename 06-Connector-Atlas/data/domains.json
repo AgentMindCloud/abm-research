@@ -1,0 +1,20 @@
+{
+ "_schema": {
+  "purpose": "The ~12 functional domains a real operation has. Domain coverage describes the REACH of a combo (how much of an operation Claude + these connectors could run) and never implies autonomy. Adjacency lists which domains naturally connect inside one workflow; it is used only for non-specialist, non-glue capabilities (see capabilities.json). Adjacency is treated as undirected by the engine (A~B if B in A.adjacent or A in B.adjacent).",
+  "authored_by": "hand, from the archetype labels in the connector directory"
+ },
+ "domains": {
+  "sales":       {"label": "Sales",               "adjacent": ["comms", "marketing", "finance", "support", "data_bi", "ops"]},
+  "marketing":   {"label": "Marketing",           "adjacent": ["comms", "sales", "design", "research", "data_bi", "ops"]},
+  "finance":     {"label": "Finance & Accounting","adjacent": ["comms", "sales", "ops", "data_bi", "legal", "hr"]},
+  "product_eng": {"label": "Product & Engineering","adjacent": ["comms", "data_bi", "ops", "design", "support"]},
+  "support":     {"label": "Support",             "adjacent": ["comms", "sales", "product_eng", "data_bi"]},
+  "hr":          {"label": "HR & Recruiting",     "adjacent": ["comms", "ops", "legal", "finance"]},
+  "ops":         {"label": "Operations & Logistics","adjacent": ["comms", "sales", "finance", "hr", "legal", "data_bi", "product_eng"]},
+  "data_bi":     {"label": "Data & BI",           "adjacent": ["comms", "sales", "marketing", "finance", "product_eng", "support", "ops", "research"]},
+  "legal":       {"label": "Legal",               "adjacent": ["comms", "ops", "finance", "hr", "sales"]},
+  "comms":       {"label": "Comms & Collaboration","adjacent": ["sales", "marketing", "finance", "product_eng", "support", "hr", "ops", "legal", "design", "research", "data_bi"]},
+  "design":      {"label": "Design & Creative",   "adjacent": ["comms", "marketing", "product_eng", "research"]},
+  "research":    {"label": "Research & Knowledge","adjacent": ["comms", "data_bi", "marketing", "design", "legal"]}
+ }
+}

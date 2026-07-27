@@ -1,0 +1,935 @@
+{
+ "_schema": {
+  "purpose": "The controlled vocabulary of functional CAPABILITIES — the jobs a connector can do. This is the language in which 'does Claude + {connectors} make a use case?' is answered. Each capability has a workflow role (input / store / output), a domain, and link flags that decide whether two capabilities connect through Claude into one workflow.",
+  "fields": {
+   "domain": "one of data/domains.json",
+   "roles": "workflow roles the capability plays: input (brings information in), store (holds/organises records), output (produces an effect or artifact). Claude is always the processor in the middle and is itself a fallback output (it answers in chat).",
+   "glue": "productivity/coordination/knowledge capability that attaches across many domains",
+   "reaches_specialist": "(glue only) whether it can attach even to specialist islands. Communication glue (email/chat/calendar) = false: you communicate about operational work, not raw specialist data feeds. Work/knowledge glue (notes/tasks/files/search/automation) = true: you can document, track, automate or search anything.",
+   "specialist": "domain-locked capability that only links (for non-glue capabilities) inside its own domain or via an explicit pairs_with. Operational specialists (monitoring, a store, recruiting) are still reachable by communication glue — you coordinate them over chat/email.",
+   "island": "a specialist that is also a pure data/knowledge feed (market data, a brokerage, case-law, a research DB): communication glue (email/chat/calendar) cannot reach it, so e.g. Gmail+brokerage stays incoherent. Work/knowledge glue still can.",
+   "pairs_with": "explicit cross-domain links a specialist is allowed to form",
+   "irreversible_output": "using this capability as an output can incur an irreversible side effect (send/pay/trade/post)"
+  }
+ },
+ "capabilities": {
+  "email": {
+   "label": "Email",
+   "domain": "comms",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": false,
+   "irreversible_output": true,
+   "note": "Read inbound mail; draft and send replies."
+  },
+  "calendar": {
+   "label": "Calendar",
+   "domain": "comms",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": false,
+   "note": "See and manage the schedule; create and move events."
+  },
+  "messaging": {
+   "label": "Chat / messaging",
+   "domain": "comms",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": false,
+   "irreversible_output": true,
+   "note": "Read and post chat messages (Slack, Teams, Discord…)."
+  },
+  "files": {
+   "label": "Files & storage",
+   "domain": "comms",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Store, read and share documents and file blobs."
+  },
+  "transcribe_meeting": {
+   "label": "Meeting transcription",
+   "domain": "comms",
+   "roles": [
+    "input"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Turn calls and meetings into searchable transcripts and notes."
+  },
+  "desktop": {
+   "label": "Local machine / OS",
+   "domain": "comms",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Read and act on the local machine: files, apps, the OS."
+  },
+  "tasks": {
+   "label": "Tasks & projects",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Create and track tasks, projects, to-dos — the commitment ledger."
+  },
+  "automate_hub": {
+   "label": "Automation hub",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "irreversible_output": true,
+   "note": "Trigger and run automations across thousands of apps."
+  },
+  "browser": {
+   "label": "Browser automation",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "irreversible_output": true,
+   "note": "Drive a real browser to read and act on any website."
+  },
+  "travel_booking": {
+   "label": "Travel & booking",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "irreversible_output": true,
+   "pairs_with": [
+    "weather_geo",
+    "local_services",
+    "calendar"
+   ],
+   "note": "Search and book flights, hotels, transport."
+  },
+  "local_services": {
+   "label": "Local services",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "irreversible_output": true,
+   "pairs_with": [
+    "travel_booking",
+    "weather_geo",
+    "calendar"
+   ],
+   "note": "Find and book local activities, venues and services."
+  },
+  "ecommerce": {
+   "label": "E-commerce store",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "specialist": true,
+   "irreversible_output": true,
+   "pairs_with": [
+    "payments",
+    "shipping",
+    "marketing_analytics",
+    "support_desk"
+   ],
+   "note": "Run an online store: products, orders, storefront."
+  },
+  "shipping": {
+   "label": "Shipping & fulfilment",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "irreversible_output": true,
+   "pairs_with": [
+    "ecommerce"
+   ],
+   "note": "Rates, labels and tracking for physical fulfilment."
+  },
+  "vertical": {
+   "label": "Vertical platform",
+   "domain": "ops",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "note": "Industry-specific platform operations (real estate, field service, etc.)."
+  },
+  "crm": {
+   "label": "CRM",
+   "domain": "sales",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "note": "The people-and-companies system of record; log and update deals and contacts."
+  },
+  "enrich_company": {
+   "label": "Company enrichment",
+   "domain": "sales",
+   "roles": [
+    "input"
+   ],
+   "pairs_with": [
+    "crm",
+    "discover_companies",
+    "outreach"
+   ],
+   "note": "Enrich a company or person with firmographic and contact data."
+  },
+  "discover_companies": {
+   "label": "Lead discovery",
+   "domain": "sales",
+   "roles": [
+    "input"
+   ],
+   "pairs_with": [
+    "crm",
+    "enrich_company",
+    "outreach"
+   ],
+   "note": "Find and list target companies and leads."
+  },
+  "outreach": {
+   "label": "Outbound campaigns",
+   "domain": "marketing",
+   "roles": [
+    "output"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "crm",
+    "discover_companies",
+    "enrich_company"
+   ],
+   "note": "Run email/marketing campaigns and sequences."
+  },
+  "marketing_analytics": {
+   "label": "Marketing analytics",
+   "domain": "marketing",
+   "roles": [
+    "input"
+   ],
+   "note": "SEO, ads and marketing-performance analytics."
+  },
+  "social_media": {
+   "label": "Social publishing",
+   "domain": "marketing",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "irreversible_output": true,
+   "note": "Read from and publish to social platforms."
+  },
+  "forms": {
+   "label": "Forms & surveys",
+   "domain": "marketing",
+   "roles": [
+    "input"
+   ],
+   "note": "Collect responses via forms, surveys and quizzes."
+  },
+  "payments": {
+   "label": "Payments",
+   "domain": "finance",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "ecommerce",
+    "accounting",
+    "invoicing"
+   ],
+   "note": "Process payments, payouts and subscriptions."
+  },
+  "accounting": {
+   "label": "Accounting",
+   "domain": "finance",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "note": "Bookkeeping, ledgers and financial reporting."
+  },
+  "invoicing": {
+   "label": "Invoicing",
+   "domain": "finance",
+   "roles": [
+    "output",
+    "store"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "accounting",
+    "payments",
+    "crm"
+   ],
+   "note": "Create and send invoices; track receivables."
+  },
+  "trading": {
+   "label": "Trading & investing",
+   "domain": "finance",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "irreversible_output": true,
+   "pairs_with": [
+    "market_data",
+    "bi_visualize"
+   ],
+   "note": "Execute trades and manage an investment portfolio.",
+   "island": true
+  },
+  "code": {
+   "label": "Code & repos",
+   "domain": "product_eng",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "pairs_with": [
+    "deploy",
+    "cloud_infra",
+    "observability"
+   ],
+   "note": "Read and write code, repositories and API context."
+  },
+  "deploy": {
+   "label": "Build & deploy",
+   "domain": "product_eng",
+   "roles": [
+    "output"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "code",
+    "cloud_infra",
+    "observability"
+   ],
+   "note": "Build and deploy applications."
+  },
+  "cloud_infra": {
+   "label": "Cloud & infrastructure",
+   "domain": "product_eng",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "code",
+    "deploy",
+    "observability",
+    "security"
+   ],
+   "note": "Manage cloud platforms and infrastructure."
+  },
+  "observability": {
+   "label": "Observability",
+   "domain": "product_eng",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "code",
+    "deploy",
+    "cloud_infra",
+    "support_desk"
+   ],
+   "note": "Monitor systems: metrics, logs, alerts, incidents."
+  },
+  "security": {
+   "label": "Security & trust",
+   "domain": "product_eng",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "code",
+    "cloud_infra",
+    "identity"
+   ],
+   "note": "Security scanning and threat/trust signals."
+  },
+  "identity": {
+   "label": "Identity & compliance",
+   "domain": "product_eng",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "security",
+    "cloud_infra",
+    "ats_hiring"
+   ],
+   "note": "Identity, auth and KYC/compliance verification."
+  },
+  "ai_tools": {
+   "label": "AI models & agents",
+   "domain": "product_eng",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "note": "AI models, agents and utility tools Claude can call."
+  },
+  "support_desk": {
+   "label": "Support desk",
+   "domain": "support",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "crm",
+    "ecommerce"
+   ],
+   "note": "Support tickets, help desk and voice-of-customer feedback."
+  },
+  "ats_hiring": {
+   "label": "Recruiting / ATS / HRIS",
+   "domain": "hr",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "job_search",
+    "payroll",
+    "esign"
+   ],
+   "note": "Applicant tracking, recruiting, HRIS and performance."
+  },
+  "job_search": {
+   "label": "Job market",
+   "domain": "hr",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "ats_hiring"
+   ],
+   "note": "Job boards and hiring-market data."
+  },
+  "payroll": {
+   "label": "Payroll & benefits",
+   "domain": "hr",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "irreversible_output": true,
+   "pairs_with": [
+    "ats_hiring",
+    "accounting"
+   ],
+   "note": "Payroll, benefits and contractor payments."
+  },
+  "database": {
+   "label": "Database / warehouse",
+   "domain": "data_bi",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "note": "Query and write structured databases and warehouses."
+  },
+  "bi_visualize": {
+   "label": "BI & dashboards",
+   "domain": "data_bi",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "note": "Analyse data and build dashboards and charts."
+  },
+  "market_data": {
+   "label": "Market & financial data",
+   "domain": "data_bi",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "trading",
+    "bi_visualize",
+    "research_science"
+   ],
+   "note": "Market, financial and economic data feeds.",
+   "island": true
+  },
+  "weather_geo": {
+   "label": "Weather & geospatial",
+   "domain": "data_bi",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "travel_booking",
+    "local_services"
+   ],
+   "note": "Weather, maps and geospatial data.",
+   "island": true
+  },
+  "legal_research": {
+   "label": "Legal research",
+   "domain": "legal",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "esign",
+    "notes_docs"
+   ],
+   "note": "Case law, contracts and regulatory research.",
+   "island": true
+  },
+  "esign": {
+   "label": "E-signature",
+   "domain": "legal",
+   "roles": [
+    "output",
+    "store"
+   ],
+   "irreversible_output": true,
+   "pairs_with": [
+    "crm",
+    "ats_hiring",
+    "legal_research"
+   ],
+   "note": "Prepare, send and track documents for e-signature."
+  },
+  "design": {
+   "label": "Design & brand",
+   "domain": "design",
+   "roles": [
+    "output"
+   ],
+   "note": "Create brand and visual design assets."
+  },
+  "diagramming": {
+   "label": "Diagrams & whiteboards",
+   "domain": "design",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "note": "Diagrams, whiteboards, maps and flowcharts."
+  },
+  "presentations": {
+   "label": "Presentations",
+   "domain": "design",
+   "roles": [
+    "output"
+   ],
+   "note": "Build slide decks and presentations."
+  },
+  "media_gen": {
+   "label": "Media generation",
+   "domain": "design",
+   "roles": [
+    "output"
+   ],
+   "note": "Generate audio, video, images and creative media."
+  },
+  "web_search": {
+   "label": "Web search",
+   "domain": "research",
+   "roles": [
+    "input"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Search and extract from the open web."
+  },
+  "research_science": {
+   "label": "Scientific research",
+   "domain": "research",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "notes_docs",
+    "market_data",
+    "bi_visualize"
+   ],
+   "note": "Scientific and scholarly research databases.",
+   "island": true
+  },
+  "public_data": {
+   "label": "Public / gov data",
+   "domain": "research",
+   "roles": [
+    "input"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "notes_docs",
+    "bi_visualize",
+    "market_data"
+   ],
+   "note": "Government and public open-data sources.",
+   "island": true
+  },
+  "knowledge_base": {
+   "label": "Knowledge & memory",
+   "domain": "research",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Team/personal memory and knowledge base."
+  },
+  "notes_docs": {
+   "label": "Notes & docs",
+   "domain": "research",
+   "roles": [
+    "input",
+    "store",
+    "output"
+   ],
+   "glue": true,
+   "reaches_specialist": true,
+   "note": "Notes, docs and durable written knowledge."
+  },
+  "education": {
+   "label": "Learning & courses",
+   "domain": "research",
+   "roles": [
+    "input",
+    "output"
+   ],
+   "specialist": true,
+   "pairs_with": [
+    "notes_docs",
+    "knowledge_base"
+   ],
+   "note": "Learning content, courses and study tools.",
+   "island": true
+  }
+ },
+ "archetype_map": {
+  "email": [
+   "email"
+  ],
+  "calendar": [
+   "calendar"
+  ],
+  "file_storage": [
+   "files"
+  ],
+  "task_pm": [
+   "tasks"
+  ],
+  "notes_docs": [
+   "notes_docs"
+  ],
+  "crm_sales": [
+   "crm"
+  ],
+  "prospecting_enrichment": [
+   "enrich_company",
+   "discover_companies"
+  ],
+  "support_cx": [
+   "support_desk"
+  ],
+  "chat_messaging": [
+   "messaging"
+  ],
+  "meetings_transcripts": [
+   "transcribe_meeting"
+  ],
+  "design_visual": [
+   "design"
+  ],
+  "diagramming": [
+   "diagramming"
+  ],
+  "presentations": [
+   "presentations"
+  ],
+  "dev_deploy": [
+   "deploy"
+  ],
+  "code_context": [
+   "code"
+  ],
+  "database_warehouse": [
+   "database"
+  ],
+  "cloud_infra": [
+   "cloud_infra"
+  ],
+  "bi_analytics": [
+   "bi_visualize"
+  ],
+  "payments_banking": [
+   "payments"
+  ],
+  "accounting_billing": [
+   "accounting"
+  ],
+  "market_data": [
+   "market_data"
+  ],
+  "research_science": [
+   "research_science"
+  ],
+  "legal": [
+   "legal_research"
+  ],
+  "esignature_docs": [
+   "esign"
+  ],
+  "hr_recruiting": [
+   "ats_hiring"
+  ],
+  "job_search": [
+   "job_search"
+  ],
+  "travel_booking": [
+   "travel_booking"
+  ],
+  "local_services": [
+   "local_services"
+  ],
+  "ecommerce_logistics": [
+   "ecommerce"
+  ],
+  "marketing_outbound": [
+   "outreach"
+  ],
+  "marketing_analytics": [
+   "marketing_analytics"
+  ],
+  "social_media": [
+   "social_media"
+  ],
+  "automation_hub": [
+   "automate_hub"
+  ],
+  "web_search": [
+   "web_search"
+  ],
+  "observability": [
+   "observability"
+  ],
+  "security": [
+   "security"
+  ],
+  "identity_verification": [
+   "identity"
+  ],
+  "desktop_local": [
+   "desktop"
+  ],
+  "browser_automation": [
+   "browser"
+  ],
+  "memory_context": [
+   "knowledge_base"
+  ],
+  "media_av": [
+   "media_gen"
+  ],
+  "forms_surveys": [
+   "forms"
+  ],
+  "education": [
+   "education"
+  ],
+  "gov_public_data": [
+   "public_data"
+  ],
+  "weather_geo": [
+   "weather_geo"
+  ],
+  "vertical_ops": [
+   "vertical"
+  ],
+  "ai_tools": [
+   "ai_tools"
+  ]
+ },
+ "refine_rules": [
+  {
+   "id": "stripe_like_payments",
+   "when": {
+    "archetype_in": [
+     "cloud_infra"
+    ],
+    "text_matches": "payment|checkout|billing infrastructure|money transfer"
+   },
+   "action": {
+    "set": [
+     "payments"
+    ]
+   }
+  },
+  {
+   "id": "brokerage_is_trading",
+   "when": {
+    "archetype_in": [
+     "market_data"
+    ],
+    "text_matches": "\\btrade\\b|trading|brokerage|execute .*order|manage .*portfolio|invest\\b|investing"
+   },
+   "action": {
+    "set": [
+     "trading"
+    ]
+   }
+  },
+  {
+   "id": "crypto_exchange_trading",
+   "when": {
+    "archetype_in": [
+     "market_data",
+     "payments_banking"
+    ],
+    "text_matches": "crypto|blockchain exchange|digital asset|token trading|wallet"
+   },
+   "action": {
+    "add": [
+     "trading"
+    ]
+   }
+  },
+  {
+   "id": "logistics_shipping",
+   "when": {
+    "archetype_in": [
+     "ecommerce_logistics"
+    ],
+    "text_matches": "shipping|logistics|freight|fulfil|fulfill|carrier|parcel|label|track.*package"
+   },
+   "action": {
+    "add": [
+     "shipping"
+    ]
+   }
+  },
+  {
+   "id": "payroll_capability",
+   "when": {
+    "archetype_in": [
+     "hr_recruiting",
+     "payments_banking",
+     "accounting_billing"
+    ],
+    "text_matches": "payroll|contractor pay|benefits admin|gusto|\\bdeel\\b|remote pay"
+   },
+   "action": {
+    "add": [
+     "payroll"
+    ]
+   }
+  },
+  {
+   "id": "invoicing_capability",
+   "when": {
+    "archetype_in": [
+     "accounting_billing",
+     "payments_banking"
+    ],
+    "text_matches": "invoic"
+   },
+   "action": {
+    "add": [
+     "invoicing"
+    ]
+   }
+  },
+  {
+   "id": "support_from_feedback",
+   "when": {
+    "archetype_in": [
+     "forms_surveys"
+    ],
+    "text_matches": "customer feedback|voice of customer|nps|support"
+   },
+   "action": {
+    "add": [
+     "support_desk"
+    ]
+   }
+  },
+  {
+   "id": "identity_kyc",
+   "when": {
+    "archetype_in": [
+     "security",
+     "cloud_infra"
+    ],
+    "text_matches": "\\bkyc\\b|verify identit|identity verif|authentication|prevent fraud"
+   },
+   "action": {
+    "add": [
+     "identity"
+    ]
+   }
+  }
+ ]
+}
