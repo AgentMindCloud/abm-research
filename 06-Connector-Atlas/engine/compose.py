@@ -270,8 +270,14 @@ def cmd_path(args):
     direct, detail = score_edge(a, b, spec)
     print(f"{a['name']} -> {b['name']}")
     if direct > 0:
-        print(f"\nDIRECT  score {direct:.3f}")
-        print(f"  join keys    : {', '.join(detail['keys'])}")
+        mode = detail["mode"]
+        print(f"\n{mode.upper()}  score {direct:.3f}")
+        if mode == "inferred":
+            print("  no shared key — Claude adapts prose into what the target accepts.")
+            print("  LOSSY: label this hop as inferred and put the human check here.")
+        elif mode == "qualifier":
+            print("  the only shared key aligns records, it does not identify them.")
+        print(f"  join keys    : {', '.join(detail['keys']) or '(none)'}")
         print(f"  best key     : {detail['join_key']} (specificity {detail['specificity']})")
         print(f"  direction fit: {detail['direction']}")
         print(f"  weakest tier : {detail['tier']}")
